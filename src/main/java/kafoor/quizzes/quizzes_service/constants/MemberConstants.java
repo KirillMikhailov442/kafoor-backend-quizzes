@@ -1,4 +1,4 @@
-package kafoor.quizzes.quizzes_service.controllers;
+package kafoor.quizzes.quizzes_service.constants;
 
 public class MemberConstants {
     public static final int MIN_COUNT_MEMBERS = 0;

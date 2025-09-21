@@ -1,11 +1,15 @@
 package kafoor.quizzes.quizzes_service.models;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
+@Builder
 @Entity
 @Table(name = "members")
 public class Member {

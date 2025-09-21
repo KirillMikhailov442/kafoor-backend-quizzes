@@ -22,4 +22,8 @@ public class QuizService {
     public Quiz findQuizById(long id){
         return quizRepo.findById(id).orElseThrow(() -> new NotFound("Quiz not found"));
     }
+
+    public Quiz createQuiz(){
+
+    }
 }

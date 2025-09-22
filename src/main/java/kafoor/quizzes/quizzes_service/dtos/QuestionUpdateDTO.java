@@ -20,4 +20,6 @@ public class QuestionUpdateDTO {
     @Min(value = 1, message = "must be more than 0")
     @Max(value = QuestionConstants.MAX_SCORES, message = "must be less than " + QuestionConstants.MAX_SCORES)
     private int scores;
+
+    private long quizId;
 }

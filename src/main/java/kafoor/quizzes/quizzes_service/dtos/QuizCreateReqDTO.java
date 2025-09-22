@@ -13,6 +13,4 @@ public class QuizCreateReqDTO {
     @Min(value = MemberConstants.MIN_COUNT_MEMBERS, message = "must be more than " + MemberConstants.MIN_COUNT_MEMBERS)
     @Max(value = MemberConstants.MAX_COUNT_MEMBERS, message = "must be less than " + MemberConstants.MAX_COUNT_MEMBERS)
     private int maxMember;
-    
-    private long userId;
 }

@@ -2,6 +2,7 @@ package kafoor.quizzes.quizzes_service.services;
 
 import kafoor.quizzes.quizzes_service.dtos.QuestionCreateReqDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuestionUpdateDTO;
+import kafoor.quizzes.quizzes_service.exceptions.Conflict;
 import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.models.Question;
 import kafoor.quizzes.quizzes_service.models.Quiz;
@@ -26,7 +27,9 @@ public class QuestionService {
         return questionRepo.findById(id).orElseThrow(() -> new NotFound("Question not found"));
     }
 
-    public Question createQuestion(QuestionCreateReqDTO dto){
+    public Question createQuestion(QuestionCreateReqDTO dto, long userId){
+        Quiz quiz = quizService.findQuizById(dto.getQuizId());
+        if(quiz.getUserId() != userId) throw new Conflict("This question does not belong to you");
         Question newQuestion = Question.builder()
                 .text(dto.getText())
                 .scores(dto.getScores())
@@ -34,7 +37,9 @@ public class QuestionService {
         return questionRepo.save(newQuestion);
     }
 
-    public Question updateQuestion(QuestionUpdateDTO dto){
+    public Question updateQuestion(QuestionUpdateDTO dto, long userId){
+        Quiz quiz = quizService.findQuizById(dto.getQuizId());
+        if(quiz.getUserId() != userId) throw new Conflict("This question does not belong to you");
         Question question = findQuestionById(dto.getId());
         if(dto.getText().isBlank()) question.setText(dto.getText());
         question.setScores(dto.getScores());

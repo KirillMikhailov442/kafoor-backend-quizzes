@@ -1,5 +1,6 @@
 package kafoor.quizzes.quizzes_service.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ public class QuestionsOption {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY)
     private List<MemberAnswer> memberAnswers = new ArrayList<>();
 

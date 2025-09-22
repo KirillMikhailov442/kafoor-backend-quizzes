@@ -1,5 +1,6 @@
 package kafoor.quizzes.quizzes_service.services;
 
+import kafoor.quizzes.quizzes_service.exceptions.Conflict;
 import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.models.Member;
 import kafoor.quizzes.quizzes_service.models.MemberAnswer;
@@ -21,7 +22,14 @@ public class MemberService {
         return memberRepo.findById(id).orElseThrow(() -> new NotFound("Member not found"));
     }
 
+    public boolean existMemberInQuiz(Quiz quiz, long memberId){
+        return quiz.getMembers().stream().allMatch(member -> member.getId() == memberId);
+    }
+
     public Member addMember(Quiz quiz, long memberId){
+        if(existMemberInQuiz(quiz, memberId)) throw new Conflict("You have already been added to the quiz");
+        if(quiz.getMembers().size() >= quiz.getMaxMember()) throw new Conflict("There is no more room in the quiz");
+
         Member newMember = Member.builder()
                 .userId(memberId)
                 .quiz(quiz)

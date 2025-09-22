@@ -1,5 +1,7 @@
 package kafoor.quizzes.quizzes_service.controllers;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kafoor.quizzes.quizzes_service.dtos.OptionCreateReqDTO;
 import kafoor.quizzes.quizzes_service.dtos.OptionUpdateReqDTO;
@@ -11,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Option", description = "Official option API")
+@SecurityRequirement(name = "JWT")
 @RestController
 @RequestMapping("/api/v1")
 public class OptionController {

@@ -2,6 +2,7 @@ package kafoor.quizzes.quizzes_service.services;
 
 import kafoor.quizzes.quizzes_service.dtos.QuizCreateReqDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuizUpdateReqDTO;
+import kafoor.quizzes.quizzes_service.exceptions.Conflict;
 import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.models.Quiz;
 import kafoor.quizzes.quizzes_service.repositories.QuizRepo;
@@ -27,15 +28,16 @@ public class QuizService {
         return quizRepo.findById(id).orElseThrow(() -> new NotFound("Quiz not found"));
     }
 
-    public Quiz createQuiz(QuizCreateReqDTO dto){
+    public Quiz createQuiz(QuizCreateReqDTO dto, long userId){
         Quiz newQuiz = Quiz.builder().name(dto.getName())
                 .maxMember(dto.getMaxMember())
-                .userId(dto.getUserId()).build();
+                .userId(userId).build();
         return quizRepo.save(newQuiz);
     }
 
-    public Quiz updateQuiz(QuizUpdateReqDTO dto){
+    public Quiz updateQuiz(QuizUpdateReqDTO dto, long userId){
         Quiz quiz = findQuizById(dto.getId());
+        if(quiz.getUserId() != userId) throw new Conflict("This quiz does not belong to you");
         if(dto.getName() != null) quiz.setName(dto.getName());
         quiz.setMaxMember(dto.getMaxMember());
         return quizRepo.save(quiz);

@@ -22,18 +22,12 @@ public class SecurityConfig {
     @Autowired
     private JWTAuthFilter jwtAuthFilter;
 
-    private static final String[] AUTH_WHITELIST = {
+    private static final String[] PERMIT_ALL = {
             "/swagger-ui.html",
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-resources/**",
             "/webjars/**"
-    };
-
-    private static final String[] PERMIT_ALL = {
-            "api/v1/users/login",
-            "api/v1/users/confirm/**",
-            "api/v1/users/update-tokens"
     };
 
     @Bean

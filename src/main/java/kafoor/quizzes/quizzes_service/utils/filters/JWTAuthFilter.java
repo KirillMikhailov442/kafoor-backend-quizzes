@@ -9,6 +9,7 @@ import kafoor.quizzes.quizzes_service.utils.jwt.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,9 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 public class JWTAuthFilter extends OncePerRequestFilter {
@@ -36,7 +40,11 @@ public class JWTAuthFilter extends OncePerRequestFilter {
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
             if(!jwtUtils.validateToken(accessToken)){
                 Claims claims = jwtUtils.getClaimsFromToken(accessToken);
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, (Collection<? extends GrantedAuthority>) claims);
+                List<Map<String, String>> roles = (List<Map<String, String>>) claims.get("roles");
+                Collection<? extends GrantedAuthority> authorities = roles.stream()
+                        .map(roleMap -> new SimpleGrantedAuthority(roleMap.get("authority")))
+                        .collect(Collectors.toList());
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }

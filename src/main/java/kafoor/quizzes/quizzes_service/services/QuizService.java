@@ -8,6 +8,8 @@ import kafoor.quizzes.quizzes_service.repositories.QuizRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 
 @Service
@@ -16,7 +18,7 @@ public class QuizService {
     private QuizRepo quizRepo;
 
     public List<Quiz> findAllQuizzesOfUser(long userId){
-        List<Quiz> quizzes = quizRepo.findByUserId(userId);
+        List<Quiz> quizzes = quizRepo.findAllByUserId(userId);
         if(quizzes.isEmpty()) throw new NotFound("Unable to find user quizzes");
         return quizzes;
     }
@@ -42,5 +44,10 @@ public class QuizService {
     public void deleteQuizById(long id){
         if(quizRepo.existsById(id)) throw new NotFound("Quiz not found");
         quizRepo.deleteById(id);
+    }
+
+    public void finishQuiz(long id){
+        Quiz quiz = findQuizById(id);
+        quiz.setEndedAt(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
     }
 }

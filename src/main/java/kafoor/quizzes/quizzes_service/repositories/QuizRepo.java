@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface QuizRepo extends JpaRepository<Quiz, Long> {
-    public List<Quiz> findByUserId(long userId);
+    public List<Quiz> findAllByUserId(long userId);
 }

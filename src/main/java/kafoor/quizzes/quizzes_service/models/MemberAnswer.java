@@ -1,8 +1,12 @@
 package kafoor.quizzes.quizzes_service.models;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
+@Data
+@Builder
 @Entity
 @Table(name = "members_answer")
 public class MemberAnswer {

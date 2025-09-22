@@ -4,6 +4,7 @@ import kafoor.quizzes.quizzes_service.dtos.QuestionCreateReqDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuestionUpdateDTO;
 import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.models.Question;
+import kafoor.quizzes.quizzes_service.models.Quiz;
 import kafoor.quizzes.quizzes_service.repositories.QuestionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,8 +18,8 @@ public class QuestionService {
     private QuizService quizService;
 
     public List<Question> findAllQuestionsOfQuiz(long quizId){
-        quizService.findQuizById(quizId);
-        return questionRepo.findByQuiz(quizId);
+        Quiz quiz = quizService.findQuizById(quizId);
+        return questionRepo.findAllByQuiz(quiz);
     }
 
     public Question findQuestionById(long id){

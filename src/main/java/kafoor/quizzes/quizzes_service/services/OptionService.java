@@ -4,30 +4,50 @@ import kafoor.quizzes.quizzes_service.dtos.OptionCreateReqDTO;
 import kafoor.quizzes.quizzes_service.dtos.OptionUpdateReqDTO;
 import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.models.Option;
+import kafoor.quizzes.quizzes_service.models.Question;
+import kafoor.quizzes.quizzes_service.models.QuestionsOption;
 import kafoor.quizzes.quizzes_service.repositories.OptionRepo;
+import kafoor.quizzes.quizzes_service.repositories.QuestionOptionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.beans.Transient;
 import java.util.List;
 
 @Service
 public class OptionService {
     @Autowired
     private OptionRepo optionRepo;
+    @Autowired
+    private QuestionService questionService;
+    @Autowired
+    private QuestionOptionRepo questionOptionRepo;
 
     public List<Option> findAllOptionsOfQuestion(long questionId){
-        return optionRepo.findByQuestion(questionId);
+        return questionOptionRepo.findOptionsByQuestionId(questionId);
     }
 
     public Option findOptionById(long id){
         return optionRepo.findById(id).orElseThrow(() -> new NotFound("Option not found"));
     }
 
-    public Option createOption(OptionCreateReqDTO dto){
+    @Transient
+    public Option addOptionToQuestion(OptionCreateReqDTO dto){
+        Question question = questionService.findQuestionById(dto.getQuestionId());
         Option newOption = Option.builder()
                 .text(dto.getText())
                 .build();
-        return optionRepo.save(newOption);
+        Option option = optionRepo.save(newOption);
+        QuestionsOption newQuestionsOption = QuestionsOption.builder()
+                .question(question)
+                .option(option)
+                .isCorrect(dto.isCorrect())
+                .build();
+        return option;
+    }
+
+    public void removeOptionFromQuestion(long questionId, long optionId){
+
     }
 
     public Option updateOption(OptionUpdateReqDTO dto){

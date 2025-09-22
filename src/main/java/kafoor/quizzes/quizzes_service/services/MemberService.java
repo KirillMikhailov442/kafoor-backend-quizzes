@@ -2,7 +2,10 @@ package kafoor.quizzes.quizzes_service.services;
 
 import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.models.Member;
+import kafoor.quizzes.quizzes_service.models.MemberAnswer;
+import kafoor.quizzes.quizzes_service.models.Option;
 import kafoor.quizzes.quizzes_service.models.Quiz;
+import kafoor.quizzes.quizzes_service.repositories.MemberAnswerRepo;
 import kafoor.quizzes.quizzes_service.repositories.MemberRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +14,8 @@ import org.springframework.stereotype.Service;
 public class MemberService {
     @Autowired
     private MemberRepo memberRepo;
+    @Autowired
+    private MemberAnswerRepo memberAnswerRepo;
 
     public Member findMemberById(long id){
         return memberRepo.findById(id).orElseThrow(() -> new NotFound("Member not found"));
@@ -28,4 +33,12 @@ public class MemberService {
         if(memberRepo.existsById(memberId)) throw new NotFound("Member not found");
         memberRepo.deleteById(memberId);
     }
+
+//    public void answerMember(long memberId, long optionId){
+//        Option option = optionService.findOptionById(optionId);
+//        Member member = findMemberById(memberId);
+//        MemberAnswer newMemberAnswer = MemberAnswer.builder()
+//                .member(member)
+//                .answer()
+//    }
 }

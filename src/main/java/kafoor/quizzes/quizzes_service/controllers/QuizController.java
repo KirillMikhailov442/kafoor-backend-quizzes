@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kafoor.quizzes.quizzes_service.dtos.QuizCreateReqDTO;
+import kafoor.quizzes.quizzes_service.dtos.QuizDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuizUpdateReqDTO;
 import kafoor.quizzes.quizzes_service.models.Quiz;
 import kafoor.quizzes.quizzes_service.services.QuizService;
@@ -22,27 +23,31 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    @GetMapping
-    public ResponseEntity<List<Quiz>> getAllQuizzesOfUser(){
+    @GetMapping("/mine")
+    public ResponseEntity<List<QuizDTO>> getAllQuizzesOfUser(){
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        return ResponseEntity.ok(quizService.findAllQuizzesOfUser(userId));
+        List<Quiz> quizzes = quizService.findAllQuizzesOfUser(userId);
+        List<QuizDTO> quizDTOS = quizzes.stream().map(QuizDTO::new).toList();
+        return ResponseEntity.ok(quizDTOS);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Quiz> getOneQuiz(@PathVariable(name = "id") long quizId){
-        return ResponseEntity.ok(quizService.findQuizById(quizId));
+    public ResponseEntity<QuizDTO> getOneQuiz(@PathVariable(name = "id") long quizId){
+        Quiz quiz = quizService.findQuizById(quizId);
+        QuizDTO quizDTO = new QuizDTO(quiz);
+        return ResponseEntity.ok(quizDTO);
     }
 
     @PostMapping
-    public ResponseEntity<Quiz> createQuiz(@Valid @RequestBody QuizCreateReqDTO dto){
+    public ResponseEntity<QuizDTO> createQuiz(@Valid @RequestBody QuizCreateReqDTO dto){
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        return ResponseEntity.ok(quizService.createQuiz(dto, userId));
+        return ResponseEntity.ok(new QuizDTO(quizService.createQuiz(dto, userId)));
     }
 
     @PutMapping
-    public ResponseEntity<Quiz> updateQuiz(@Valid @RequestBody QuizUpdateReqDTO dto){
+    public ResponseEntity<QuizDTO> updateQuiz(@Valid @RequestBody QuizUpdateReqDTO dto){
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        return ResponseEntity.ok(quizService.updateQuiz(dto, userId));
+        return ResponseEntity.ok(new QuizDTO(quizService.updateQuiz(dto, userId)));
     }
 
     @DeleteMapping("/{id}")

@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kafoor.quizzes.quizzes_service.dtos.QuestionCreateReqDTO;
+import kafoor.quizzes.quizzes_service.dtos.QuestionDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuestionUpdateDTO;
 import kafoor.quizzes.quizzes_service.models.Question;
 import kafoor.quizzes.quizzes_service.services.QuestionService;
@@ -23,25 +24,27 @@ public class QuestionController {
     private QuestionService questionService;
 
     @GetMapping("/questions-of-quiz/{id}")
-    public ResponseEntity<List<Question>> getAllQuestionsOfQuiz(long quizId){
-        return ResponseEntity.ok(questionService.findAllQuestionsOfQuiz(quizId));
+    public ResponseEntity<List<QuestionDTO>> getAllQuestionsOfQuiz(long quizId){
+        List<Question> questions = questionService.findAllQuestionsOfQuiz(quizId);
+        return ResponseEntity.ok(questions.stream().map(QuestionDTO::new).toList());
     }
 
     @GetMapping("/questions/{id}")
-    public ResponseEntity<Question> getOneQuestion(@PathVariable(name = "id") long questionId){
-       return ResponseEntity.ok(questionService.findQuestionById(questionId));
+    public ResponseEntity<QuestionDTO> getOneQuestion(@PathVariable(name = "id") long questionId){
+        Question question = questionService.findQuestionById(questionId);
+       return ResponseEntity.ok(new QuestionDTO(question));
     }
 
     @PostMapping("/questions")
-    public ResponseEntity<Question> createQuestion(@Valid @RequestBody QuestionCreateReqDTO dto){
+    public ResponseEntity<QuestionDTO> createQuestion(@Valid @RequestBody QuestionCreateReqDTO dto){
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        return ResponseEntity.ok(questionService.createQuestion(dto, userId));
+        return ResponseEntity.ok(new QuestionDTO(questionService.createQuestion(dto, userId)));
     }
 
     @PutMapping("/questions")
-    public ResponseEntity<Question> updateQuestion(@Valid @RequestBody QuestionUpdateDTO dto){
+    public ResponseEntity<QuestionDTO> updateQuestion(@Valid @RequestBody QuestionUpdateDTO dto){
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
-        return ResponseEntity.ok(questionService.updateQuestion(dto, userId));
+        return ResponseEntity.ok(new QuestionDTO(questionService.updateQuestion(dto, userId)));
     }
 
     @DeleteMapping("/questions/{id}")

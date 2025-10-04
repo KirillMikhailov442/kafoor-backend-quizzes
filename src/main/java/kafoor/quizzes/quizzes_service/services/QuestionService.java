@@ -16,6 +16,7 @@ import java.util.List;
 public class QuestionService {
     @Autowired
     private QuestionRepo questionRepo;
+    @Autowired
     private QuizService quizService;
 
     public List<Question> findAllQuestionsOfQuiz(long quizId){
@@ -33,6 +34,7 @@ public class QuestionService {
         Question newQuestion = Question.builder()
                 .text(dto.getText())
                 .scores(dto.getScores())
+                .quiz(quiz)
                 .build();
         return questionRepo.save(newQuestion);
     }

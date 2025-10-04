@@ -2,8 +2,10 @@ package kafoor.quizzes.quizzes_service.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,8 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "options")
+@NoArgsConstructor
+@AllArgsConstructor
 public class Option {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

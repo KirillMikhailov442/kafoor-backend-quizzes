@@ -43,6 +43,7 @@ public class OptionService {
                 .option(option)
                 .isCorrect(dto.isCorrect())
                 .build();
+        questionOptionRepo.save(newQuestionsOption);
         return option;
     }
 

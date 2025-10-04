@@ -19,7 +19,8 @@ public class QuizService {
     private QuizRepo quizRepo;
 
     public List<Quiz> findAllQuizzesOfUser(long userId){
-        List<Quiz> quizzes = quizRepo.findAllByUserId(userId);
+        List<Quiz> quizzes = quizRepo.findByUserId(userId);
+        System.out.println(quizzes.size());
         if(quizzes.isEmpty()) throw new NotFound("Unable to find user quizzes");
         return quizzes;
     }

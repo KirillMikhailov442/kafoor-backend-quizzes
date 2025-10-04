@@ -2,8 +2,10 @@ package kafoor.quizzes.quizzes_service.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,6 +16,8 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "questions_option")
+@NoArgsConstructor
+@AllArgsConstructor
 public class QuestionsOption {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +27,7 @@ public class QuestionsOption {
     @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY)
     private List<MemberAnswer> memberAnswers = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "question_id", nullable = false)
     private Question question;

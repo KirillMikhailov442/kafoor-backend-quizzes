@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import kafoor.quizzes.quizzes_service.constants.MemberConstants;
 import kafoor.quizzes.quizzes_service.constants.QuestionConstants;
 import lombok.Getter;
 

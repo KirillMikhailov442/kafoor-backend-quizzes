@@ -11,6 +11,8 @@ import kafoor.quizzes.quizzes_service.repositories.MemberRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MemberService {
     @Autowired
@@ -23,6 +25,7 @@ public class MemberService {
     }
 
     public boolean existMemberInQuiz(Quiz quiz, long memberId){
+        if(quiz.getMembers().isEmpty()) return false;
         return quiz.getMembers().stream().allMatch(member -> member.getId() == memberId);
     }
 
@@ -37,16 +40,24 @@ public class MemberService {
         return memberRepo.save(newMember);
     }
 
+    public List<Member> addMembers(Quiz quiz, List<Long> membersId){
+        List<Member> members = membersId.stream().map(member -> {
+            if(existMemberInQuiz(quiz, member)) throw new Conflict("You have already been added to the quiz");
+            if(quiz.getMembers().size() >= quiz.getMaxMember()) throw new Conflict("There is no more room in the quiz");
+
+            return Member.builder()
+                    .userId(member)
+                    .quiz(quiz)
+                    .build();
+        }).toList();
+        return memberRepo.saveAll(members);
+    }
+
     public void removeMember(long memberId){
         if(memberRepo.existsById(memberId)) throw new NotFound("Member not found");
         memberRepo.deleteById(memberId);
     }
 
-//    public void answerMember(long memberId, long optionId){
-//        Option option = optionService.findOptionById(optionId);
-//        Member member = findMemberById(memberId);
-//        MemberAnswer newMemberAnswer = MemberAnswer.builder()
-//                .member(member)
-//                .answer()
-//    }
+    public void answerMember(long memberId, long optionId){
+    }
 }

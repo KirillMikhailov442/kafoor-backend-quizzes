@@ -5,6 +5,7 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.utils.jwt.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,7 +38,10 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 && authHeader.substring(7).trim() != null
                 && authHeader.startsWith("Bearer ")){
             accessToken = authHeader.substring(7);
-            username = jwtUtils.getUsernameFromToken(accessToken);
+            if (!jwtUtils.validateToken(accessToken)){
+                System.out.println("ВАЛИД");
+                username = jwtUtils.getUsernameFromToken(accessToken);
+            }
         }
 
         if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
@@ -51,6 +55,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }
+
         }
         filterChain.doFilter(request, response);
     }

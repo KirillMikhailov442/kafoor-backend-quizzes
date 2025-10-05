@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import kafoor.quizzes.quizzes_service.dtos.QuizCreateReqDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuizDTO;
+import kafoor.quizzes.quizzes_service.dtos.QuizStartDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuizUpdateReqDTO;
 import kafoor.quizzes.quizzes_service.models.Quiz;
 import kafoor.quizzes.quizzes_service.services.QuizService;
@@ -48,6 +49,18 @@ public class QuizController {
     public ResponseEntity<QuizDTO> updateQuiz(@Valid @RequestBody QuizUpdateReqDTO dto){
         long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
         return ResponseEntity.ok(new QuizDTO(quizService.updateQuiz(dto, userId)));
+    }
+
+    @PostMapping("/start")
+    public ResponseEntity<String> startQuiz(@Valid @RequestBody QuizStartDTO dto){
+        quizService.startQuiz(dto);
+        return ResponseEntity.ok("The quiz has begun");
+    }
+
+    @PostMapping("/finish")
+    public ResponseEntity<String> finishQuiz(long quizId){
+        quizService.finishQuiz(quizId);
+        return ResponseEntity.ok("The quiz has over");
     }
 
     @DeleteMapping("/{id}")

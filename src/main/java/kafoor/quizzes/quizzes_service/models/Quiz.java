@@ -49,4 +49,7 @@ public class Quiz {
 
     @Column(name = "ended_at")
     private long endedAt;
+
+    @Column(name = "started_at")
+    private long startedAt;
 }

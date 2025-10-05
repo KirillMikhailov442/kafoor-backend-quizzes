@@ -23,9 +23,7 @@ public class QuizService {
     private MemberService memberService;
 
     public List<Quiz> findAllQuizzesOfUser(long userId){
-        List<Quiz> quizzes = quizRepo.findByUserId(userId);
-        if(quizzes.isEmpty()) throw new NotFound("Unable to find user quizzes");
-        return quizzes;
+        return  quizRepo.findByUserId(userId);
     }
 
     public Quiz findQuizById(long id){

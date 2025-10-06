@@ -15,8 +15,9 @@ public class QuizDTO {
     private List<QuestionDTO> questions;
     private List<Member> members;
     private long endedAt;
+    private long userId;
 
-    public QuizDTO(Quiz quiz){
+    public QuizDTO(Quiz quiz) {
         id = quiz.getId();
         name = quiz.getName();
         maxMember = quiz.getMaxMember();
@@ -27,5 +28,6 @@ public class QuizDTO {
                 .toList();
         members = quiz.getMembers();
         endedAt = quiz.getEndedAt();
+        userId = quiz.getUserId();
     }
 }

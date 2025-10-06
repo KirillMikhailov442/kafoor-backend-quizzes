@@ -3,18 +3,22 @@ package kafoor.quizzes.quizzes_service.controllers;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import kafoor.quizzes.quizzes_service.configs.SocketIOConfig;
+import kafoor.quizzes.quizzes_service.constants.SocketAction;
 import kafoor.quizzes.quizzes_service.dtos.QuizCreateReqDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuizDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuizStartDTO;
 import kafoor.quizzes.quizzes_service.dtos.QuizUpdateReqDTO;
 import kafoor.quizzes.quizzes_service.models.Quiz;
 import kafoor.quizzes.quizzes_service.services.QuizService;
+import kafoor.quizzes.quizzes_service.services.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Quiz", description = "Official quiz API")
 @SecurityRequirement(name = "JWT")
@@ -23,6 +27,10 @@ import java.util.List;
 public class QuizController {
     @Autowired
     private QuizService quizService;
+    @Autowired
+    private SocketIOConfig socket;
+    @Autowired
+    private RedisService redisService;
 
     @GetMapping("/mine")
     public ResponseEntity<List<QuizDTO>> getAllQuizzesOfUser(){
@@ -53,7 +61,15 @@ public class QuizController {
 
     @PostMapping("/start")
     public ResponseEntity<String> startQuiz(@Valid @RequestBody QuizStartDTO dto){
-        quizService.startQuiz(dto);
+//        quizService.startQuiz(dto);
+        Quiz quiz = quizService.findQuizById(dto.getQuizId());
+        System.out.println("Quiz id: " + quiz.getId());
+        socket.socketIOServer().getRoomOperations(String.valueOf(dto.getQuizId())).sendEvent(SocketAction.START_QUIZ.name());
+        System.out.println("Мы отправили всем участниками об начлале игры");
+        String authorId = (String) redisService.getValue(String.valueOf(quiz.getUserId()));
+        System.out.println("User id из redis по socket.io id: " + authorId);
+        socket.socketIOServer().getClient(UUID.fromString(authorId)).sendEvent(SocketAction.START_QUIZ.name(), quiz);
+        System.out.println("Мы отправили только авторе об начлале игры и все вопросы");
         return ResponseEntity.ok("The quiz has begun");
     }
 

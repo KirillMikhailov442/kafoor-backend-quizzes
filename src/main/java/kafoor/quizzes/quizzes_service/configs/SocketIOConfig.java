@@ -1,8 +1,11 @@
 package kafoor.quizzes.quizzes_service.configs;
 
 import com.corundumstudio.socketio.Configuration;
+import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import jakarta.annotation.PreDestroy;
+import kafoor.quizzes.quizzes_service.constants.SocketAction;
+import kafoor.quizzes.quizzes_service.dtos.QuizStartDTO;
 import kafoor.quizzes.quizzes_service.exceptions.Conflict;
 import kafoor.quizzes.quizzes_service.models.Quiz;
 import kafoor.quizzes.quizzes_service.services.QuizService;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,9 +38,9 @@ public class SocketIOConfig {
     private SocketIOServer server;
 
     @Bean
-    public SocketIOServer socketIOServer(){
+    public SocketIOServer socketIOServer() {
         Configuration config = new Configuration();
-        config.setHostname("0.0.0.0");
+        config.setHostname(host);
         config.setPort(port);
         config.setOrigin("*");
 
@@ -44,33 +48,53 @@ public class SocketIOConfig {
 
         server.addConnectListener(client -> {
             System.out.println("Client connected");
-            System.out.println(client.getHandshakeData().getHttpHeaders().get("token"));
         });
+
         server.addDisconnectListener(client -> System.out.println("Client disconnected: " + client.getSessionId()));
-        server.addEventListener("JOIN_TO_QUIZ", Map.class, (client, data, ackSender) -> {
-            System.out.println("join to quiz");
-            System.out.println(data.get("quizId"));
+
+        server.addEventListener(SocketAction.JOIN_TO_QUIZ.toString(), Map.class, (client, data, ackSender) -> {
             client.joinRoom(data.get("quizId").toString());
-            System.out.println("REDIS:");
-            System.out.println(redisService.getValue(client.getSessionId().toString()));
-            if(redisService.getValue(client.getSessionId().toString()) == null){
-                System.out.println("Сохраняем socket id и client id в RAM");
-                redisService.setValue(client.getSessionId().toString(), data.get("userId"));
-            }
+            // if (redisService.getValue(client.getSessionId().toString()) == null) {
+            // System.out.println("Сохраняем socket id и client id в RAM");
+            // redisService.setValue(client.getSessionId().toString(), data.get("userId"));
+            // }
             Map<String, Object> map = new HashMap<>();
             map.put("socketId", client.getSessionId());
             map.put("name", data.get("name"));
+            map.put("userId", data.get("userId"));
             map.put("nickname", data.get("nickname"));
-            server.getRoomOperations(data.get("quizId").toString()).sendEvent("TELL_ME_YOURSELF", map );
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.JOIN_TO_QUIZ.getName(),
+                    map);
         });
-        server.addEventListener("LEAVE_FROM_QUIZ", String.class, (client, data, ackRequest) -> {
-            System.out.println("LEAVE");
-            System.out.println(data);
+
+        server.addEventListener(SocketAction.TELL_ABOUT_YOURSELF.getName(), Map.class, (client, data, ackSender) -> {
+            Map<String, Object> map = new HashMap<>();
+            map.put("socketId", client.getSessionId());
+            map.put("name", data.get("name"));
+            map.put("userId", data.get("userId"));
+            map.put("nickname", data.get("nickname"));
+            System.out.println(data.get("quizId"));
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(
+                    SocketAction.TELL_ABOUT_YOURSELF.getName(),
+                    map);
+        });
+
+        server.addEventListener(SocketAction.LEAVE_FROM_QUIZ.getName(), String.class, (client, data, ackRequest) -> {
+            System.out.println("Ушел пользователь " + client.getSessionId());
             client.leaveRoom(data);
-            server.getRoomOperations(data).sendEvent("LEAVE_FROM_QUIZ", client.getSessionId().toString());
-            redisService.deleteValue(client.getSessionId().toString());
+            server.getRoomOperations(data).sendEvent(SocketAction.LEAVE_FROM_QUIZ.getName(),
+                    client.getSessionId().toString());
+            // redisService.deleteValue(client.getSessionId().toString());
+        });
+
+        server.addEventListener(SocketAction.NEXT_QUESTION.getName(), String.class, (client, data, ackRequest) -> {
+            server.getRoomOperations(data).sendEvent(SocketAction.NEXT_QUESTION.getName());
+        });
+
+        server.addEventListener(SocketAction.FINISH_QUIZ.toString(), String.class, (client, data, ackRequest) -> {
 
         });
+
         server.start();
         return server;
     }

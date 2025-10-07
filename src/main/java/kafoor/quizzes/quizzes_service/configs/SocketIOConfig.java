@@ -73,17 +73,15 @@ public class SocketIOConfig {
             map.put("name", data.get("name"));
             map.put("userId", data.get("userId"));
             map.put("nickname", data.get("nickname"));
-            System.out.println(data.get("quizId"));
             server.getRoomOperations(data.get("quizId").toString()).sendEvent(
                     SocketAction.TELL_ABOUT_YOURSELF.getName(),
                     map);
         });
 
-        server.addEventListener(SocketAction.LEAVE_FROM_QUIZ.getName(), String.class, (client, data, ackRequest) -> {
-            System.out.println("Ушел пользователь " + client.getSessionId());
-            client.leaveRoom(data);
-            server.getRoomOperations(data).sendEvent(SocketAction.LEAVE_FROM_QUIZ.getName(),
+        server.addEventListener(SocketAction.LEAVE_FROM_QUIZ.getName(), Map.class, (client, data, ackRequest) -> {
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.LEAVE_FROM_QUIZ.getName(),
                     client.getSessionId().toString());
+            client.leaveRoom(data.get("quizId").toString());
             // redisService.deleteValue(client.getSessionId().toString());
         });
 

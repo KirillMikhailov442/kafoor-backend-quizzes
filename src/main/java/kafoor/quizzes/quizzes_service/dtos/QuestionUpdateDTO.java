@@ -21,5 +21,10 @@ public class QuestionUpdateDTO {
     @Max(value = QuestionConstants.MAX_SCORES, message = "must be less than " + QuestionConstants.MAX_SCORES)
     private int scores;
 
+    @NotNull(message = "time limit of participants is mandatory")
+    @Min(value = QuestionConstants.MIN_TIME_LIMIT, message = "must be more than " + QuestionConstants.MIN_TIME_LIMIT)
+    @Max(value = QuestionConstants.MAX_TIME_LIMIT, message = "must be less than " + QuestionConstants.MAX_TIME_LIMIT)
+    private byte timeLimit;
+
     private long quizId;
 }

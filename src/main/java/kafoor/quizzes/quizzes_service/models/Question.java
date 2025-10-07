@@ -24,6 +24,9 @@ public class Question {
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionsOption> options = new ArrayList<>();
 
+    @Column(name = "time_limit", nullable = false)
+    private byte timelimit;
+
     @Column(name = "text", nullable = false)
     private String text;
 

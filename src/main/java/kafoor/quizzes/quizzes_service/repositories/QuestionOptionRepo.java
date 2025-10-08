@@ -8,12 +8,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface QuestionOptionRepo extends JpaRepository<QuestionsOption, Long> {
     @Query("SELECT qo.option FROM QuestionsOption qo WHERE qo.question.id = :questionId")
-    List<Option> findOptionsByQuestionId(@Param("questionId") long questionId);
+    List<Option> findOptionsByQuestionId(@Param("questionId") UUID questionId);
+
     List<QuestionsOption> findAllByQuestion(Question question);
+
     List<QuestionsOption> findAllByOption(Option option);
+
     QuestionsOption findByQuestion(Question question);
+
     QuestionsOption findByOption(Option option);
 }

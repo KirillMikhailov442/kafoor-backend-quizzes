@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -20,8 +21,9 @@ import java.util.List;
 @AllArgsConstructor
 public class QuestionsOption {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "UUID")
+    @Column(unique = true, updatable = false)
+    private UUID id;
 
     @JsonIgnore
     @OneToMany(mappedBy = "answer", fetch = FetchType.LAZY)

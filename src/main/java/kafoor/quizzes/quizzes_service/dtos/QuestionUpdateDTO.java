@@ -1,5 +1,7 @@
 package kafoor.quizzes.quizzes_service.dtos;
 
+import java.util.UUID;
+
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -10,8 +12,7 @@ import lombok.Getter;
 @Getter
 public class QuestionUpdateDTO {
     @NotNull(message = " ID is mandatory")
-    @Min(value = 1, message = "must be more than 0")
-    private long id;
+    private UUID id;
 
     @NotBlank(message = "Text is mandatory")
     private String text;
@@ -26,5 +27,5 @@ public class QuestionUpdateDTO {
     @Max(value = QuestionConstants.MAX_TIME_LIMIT, message = "must be less than " + QuestionConstants.MAX_TIME_LIMIT)
     private byte timeLimit;
 
-    private long quizId;
+    private UUID quizId;
 }

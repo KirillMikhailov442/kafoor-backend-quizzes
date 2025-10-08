@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -18,8 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 public class Question {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "UUID")
+    @Column(unique = true, updatable = false)
+    private UUID id;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionsOption> options = new ArrayList<>();

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class QuestionService {
@@ -19,12 +20,12 @@ public class QuestionService {
     @Autowired
     private QuizService quizService;
 
-    public List<Question> findAllQuestionsOfQuiz(long quizId) {
+    public List<Question> findAllQuestionsOfQuiz(UUID quizId) {
         Quiz quiz = quizService.findQuizById(quizId);
         return questionRepo.findAllByQuiz(quiz);
     }
 
-    public Question findQuestionById(long id) {
+    public Question findQuestionById(UUID id) {
         return questionRepo.findById(id).orElseThrow(() -> new NotFound("Question not found"));
     }
 
@@ -37,6 +38,7 @@ public class QuestionService {
                 .scores(dto.getScores())
                 .timelimit(dto.getTimeLimit())
                 .quiz(quiz)
+                .id(dto.getQuestionId())
                 .build();
         return questionRepo.save(newQuestion);
     }
@@ -54,7 +56,7 @@ public class QuestionService {
         return questionRepo.save(question);
     }
 
-    public void deleteQuestionById(long id) {
+    public void deleteQuestionById(UUID id) {
         if (questionRepo.existsById(id))
             throw new NotFound("Question not found");
         questionRepo.deleteById(id);

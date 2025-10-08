@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.beans.Transient;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OptionService {
@@ -23,19 +24,20 @@ public class OptionService {
     @Autowired
     private QuestionOptionRepo questionOptionRepo;
 
-    public List<Option> findAllOptionsOfQuestion(long questionId){
+    public List<Option> findAllOptionsOfQuestion(UUID questionId) {
         return questionOptionRepo.findOptionsByQuestionId(questionId);
     }
 
-    public Option findOptionById(long id){
+    public Option findOptionById(UUID id) {
         return optionRepo.findById(id).orElseThrow(() -> new NotFound("Option not found"));
     }
 
     @Transient
-    public Option addOptionToQuestion(OptionCreateReqDTO dto){
+    public Option addOptionToQuestion(OptionCreateReqDTO dto) {
         Question question = questionService.findQuestionById(dto.getQuestionId());
         Option newOption = Option.builder()
                 .text(dto.getText())
+                .id(dto.getOptionId())
                 .build();
         Option option = optionRepo.save(newOption);
         QuestionsOption newQuestionsOption = QuestionsOption.builder()
@@ -47,18 +49,20 @@ public class OptionService {
         return option;
     }
 
-    public void removeOptionFromQuestion(long questionId, long optionId){
+    public void removeOptionFromQuestion(long questionId, long optionId) {
 
     }
 
-    public Option updateOption(OptionUpdateReqDTO dto){
+    public Option updateOption(OptionUpdateReqDTO dto) {
         Option option = findOptionById(dto.getId());
-        if(dto.getText() != null && dto.getText().isEmpty()) option.setText(dto.getText());
+        if (dto.getText() != null && dto.getText().isEmpty())
+            option.setText(dto.getText());
         return optionRepo.save(option);
     }
 
-    public void deleteOptionById(long id){
-        if(optionRepo.existsById(id)) throw new NotFound("Option not found");
+    public void deleteOptionById(UUID id) {
+        if (optionRepo.existsById(id))
+            throw new NotFound("Option not found");
         optionRepo.deleteById(id);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Tag(name = "Option", description = "Official option API")
 @SecurityRequirement(name = "JWT")
@@ -22,27 +23,27 @@ public class OptionController {
     private OptionService optionService;
 
     @GetMapping("/options-of-question/{id}")
-    public ResponseEntity<List<Option>> getAllOptionsOfQuestion(@PathVariable(name = "id") long questionId){
+    public ResponseEntity<List<Option>> getAllOptionsOfQuestion(@PathVariable(name = "id") UUID questionId) {
         return ResponseEntity.ok(optionService.findAllOptionsOfQuestion(questionId));
     }
 
     @GetMapping("/options/{id}")
-    public ResponseEntity<Option> getOneOption(@PathVariable(name = "id") long optionId){
+    public ResponseEntity<Option> getOneOption(@PathVariable(name = "id") UUID optionId) {
         return ResponseEntity.ok(optionService.findOptionById(optionId));
     }
 
     @PostMapping("/options")
-    public ResponseEntity<Option> addOption(@Valid @RequestBody OptionCreateReqDTO dto){
+    public ResponseEntity<Option> addOption(@Valid @RequestBody OptionCreateReqDTO dto) {
         return ResponseEntity.ok(optionService.addOptionToQuestion(dto));
     }
 
     @PutMapping("/options")
-    public ResponseEntity<Option> updateOption(@Valid @RequestBody OptionUpdateReqDTO dto){
+    public ResponseEntity<Option> updateOption(@Valid @RequestBody OptionUpdateReqDTO dto) {
         return ResponseEntity.ok(optionService.updateOption(dto));
     }
 
     @DeleteMapping("/options/{id}")
-    public ResponseEntity<String> deleteOptionById( @PathVariable(name = "id") long optionId){
+    public ResponseEntity<String> deleteOptionById(@PathVariable(name = "id") UUID optionId) {
         optionService.deleteOptionById(optionId);
         return ResponseEntity.ok("The option was successfully deleted");
     }

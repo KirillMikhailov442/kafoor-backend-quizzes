@@ -6,21 +6,25 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Data
 public class QuizDTO {
-    private long id;
+    private UUID id;
     private String name;
-    private int maxMember;
+    private int maxMembers;
     private List<QuestionDTO> questions;
     private List<Member> members;
+    private long startedAt;
     private long endedAt;
+    private long createdAt;
+    private long updatedAt;
     private long userId;
 
     public QuizDTO(Quiz quiz) {
         id = quiz.getId();
         name = quiz.getName();
-        maxMember = quiz.getMaxMember();
+        maxMembers = quiz.getMaxMembers();
         questions = Optional.ofNullable(quiz.getQuestions())
                 .orElseGet(List::of)
                 .stream()
@@ -28,6 +32,9 @@ public class QuizDTO {
                 .toList();
         members = quiz.getMembers();
         endedAt = quiz.getEndedAt();
+        startedAt = quiz.getStartedAt();
+        createdAt = quiz.getCreatedAt();
+        updatedAt = quiz.getUpdatedAt();
         userId = quiz.getUserId();
     }
 }

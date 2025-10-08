@@ -11,6 +11,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @Builder
@@ -20,14 +21,15 @@ import java.util.List;
 @AllArgsConstructor
 public class Quiz {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    @GeneratedValue(generator = "UUID")
+    @Column(unique = true, updatable = false)
+    private UUID id;
 
     @Column(name = "name", length = 64, nullable = false)
     private String name;
 
-    @Column(name = "max_member", nullable = false)
-    private int maxMember;
+    @Column(name = "max_members", nullable = false)
+    private int maxMembers;
 
     @JsonIgnore
     @Column(name = "user_id", nullable = false)

@@ -5,10 +5,11 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Data
 public class QuestionDTO {
-    private long id;
+    private UUID id;
     private String text;
     private int scores;
     private List<QuestionOptionResDTO> options;

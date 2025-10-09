@@ -25,13 +25,13 @@ public class QuestionController {
     private QuestionService questionService;
 
     @GetMapping("/questions-of-quiz/{id}")
-    public ResponseEntity<List<QuestionDTO>> getAllQuestionsOfQuiz(UUID quizId) {
+    public ResponseEntity<List<QuestionDTO>> getAllQuestionsOfQuiz(long quizId) {
         List<Question> questions = questionService.findAllQuestionsOfQuiz(quizId);
         return ResponseEntity.ok(questions.stream().map(QuestionDTO::new).toList());
     }
 
     @GetMapping("/questions/{id}")
-    public ResponseEntity<QuestionDTO> getOneQuestion(@PathVariable(name = "id") UUID questionId) {
+    public ResponseEntity<QuestionDTO> getOneQuestion(@PathVariable(name = "id") long questionId) {
         Question question = questionService.findQuestionById(questionId);
         return ResponseEntity.ok(new QuestionDTO(question));
     }
@@ -49,7 +49,7 @@ public class QuestionController {
     }
 
     @DeleteMapping("/questions/{id}")
-    public ResponseEntity<String> deleteQuestionById(@PathVariable(name = "id") UUID questionId) {
+    public ResponseEntity<String> deleteQuestionById(@PathVariable(name = "id") long questionId) {
         questionService.deleteQuestionById(questionId);
         return ResponseEntity.ok("The question was successfully deleted");
     }

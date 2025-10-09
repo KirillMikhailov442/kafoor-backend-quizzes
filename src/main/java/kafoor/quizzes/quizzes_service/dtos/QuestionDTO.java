@@ -9,17 +9,17 @@ import java.util.UUID;
 
 @Data
 public class QuestionDTO {
-    private UUID id;
     private String text;
     private int scores;
     private List<QuestionOptionResDTO> options;
     private byte timeLimit;
+    private UUID clientId;
 
     public QuestionDTO(Question question) {
-        id = question.getId();
         text = question.getText();
         scores = question.getScores();
         timeLimit = question.getTimelimit();
+        clientId = question.getClientId();
         options = Optional.ofNullable(question.getOptions())
                 .orElseGet(List::of)
                 .stream()

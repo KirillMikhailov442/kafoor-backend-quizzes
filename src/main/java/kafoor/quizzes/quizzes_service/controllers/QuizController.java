@@ -41,7 +41,7 @@ public class QuizController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<QuizDTO> getOneQuiz(@PathVariable(name = "id") UUID quizId) {
+    public ResponseEntity<QuizDTO> getOneQuiz(@PathVariable(name = "id") long quizId) {
         Quiz quiz = quizService.findQuizById(quizId);
         QuizDTO quizDTO = new QuizDTO(quiz);
         return ResponseEntity.ok(quizDTO);
@@ -75,13 +75,13 @@ public class QuizController {
     }
 
     @PostMapping("/finish")
-    public ResponseEntity<String> finishQuiz(@PathVariable(name = "id") UUID quizId) {
+    public ResponseEntity<String> finishQuiz(@PathVariable(name = "id") long quizId) {
         quizService.finishQuiz(quizId);
         return ResponseEntity.ok("The quiz has over");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteQuizById(@PathVariable(name = "id") UUID quizId) {
+    public ResponseEntity<String> deleteQuizById(@PathVariable(name = "id") long quizId) {
         quizService.deleteQuizById(quizId);
         return ResponseEntity.ok("The quiz was successfully deleted");
     }

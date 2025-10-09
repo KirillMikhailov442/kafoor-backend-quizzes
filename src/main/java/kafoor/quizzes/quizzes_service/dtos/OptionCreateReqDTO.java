@@ -9,10 +9,10 @@ import lombok.Getter;
 @Getter
 public class OptionCreateReqDTO {
     @NotNull(message = "Question ID is mandatory")
-    private UUID questionId;
+    private long questionId;
 
-    @NotBlank(message = "Option ID is mandatory")
-    private UUID optionId;
+    @NotBlank(message = "client ID is mandatory")
+    private UUID clientId;
 
     @NotBlank(message = "Text is mandatory")
     private String text;

@@ -19,9 +19,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Option {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(unique = true, updatable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "client_id", unique = true)
+    private UUID clientId;
 
     @JsonIgnore
     @OneToMany(mappedBy = "option", fetch = FetchType.LAZY)

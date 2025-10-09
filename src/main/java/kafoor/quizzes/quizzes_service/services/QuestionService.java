@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class QuestionService {
@@ -20,12 +19,12 @@ public class QuestionService {
     @Autowired
     private QuizService quizService;
 
-    public List<Question> findAllQuestionsOfQuiz(UUID quizId) {
+    public List<Question> findAllQuestionsOfQuiz(long quizId) {
         Quiz quiz = quizService.findQuizById(quizId);
         return questionRepo.findAllByQuiz(quiz);
     }
 
-    public Question findQuestionById(UUID id) {
+    public Question findQuestionById(long id) {
         return questionRepo.findById(id).orElseThrow(() -> new NotFound("Question not found"));
     }
 
@@ -36,9 +35,9 @@ public class QuestionService {
         Question newQuestion = Question.builder()
                 .text(dto.getText())
                 .scores(dto.getScores())
+                .clientId(dto.getClientId())
                 .timelimit(dto.getTimeLimit())
                 .quiz(quiz)
-                .id(dto.getQuestionId())
                 .build();
         return questionRepo.save(newQuestion);
     }
@@ -55,14 +54,11 @@ public class QuestionService {
         if (dto.getTimeLimit() != 0)
             question.setTimelimit((dto.getTimeLimit()));
 
-        if (question.getId() == null)
-            question.setId(dto.getId());
-
         question.setScores(dto.getScores());
         return questionRepo.save(question);
     }
 
-    public void deleteQuestionById(UUID id) {
+    public void deleteQuestionById(long id) {
         if (questionRepo.existsById(id))
             throw new NotFound("Question not found");
         questionRepo.deleteById(id);

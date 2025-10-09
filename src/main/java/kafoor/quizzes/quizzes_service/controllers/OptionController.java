@@ -23,12 +23,12 @@ public class OptionController {
     private OptionService optionService;
 
     @GetMapping("/options-of-question/{id}")
-    public ResponseEntity<List<Option>> getAllOptionsOfQuestion(@PathVariable(name = "id") UUID questionId) {
+    public ResponseEntity<List<Option>> getAllOptionsOfQuestion(@PathVariable(name = "id") long questionId) {
         return ResponseEntity.ok(optionService.findAllOptionsOfQuestion(questionId));
     }
 
     @GetMapping("/options/{id}")
-    public ResponseEntity<Option> getOneOption(@PathVariable(name = "id") UUID optionId) {
+    public ResponseEntity<Option> getOneOption(@PathVariable(name = "id") long optionId) {
         return ResponseEntity.ok(optionService.findOptionById(optionId));
     }
 
@@ -43,7 +43,7 @@ public class OptionController {
     }
 
     @DeleteMapping("/options/{id}")
-    public ResponseEntity<String> deleteOptionById(@PathVariable(name = "id") UUID optionId) {
+    public ResponseEntity<String> deleteOptionById(@PathVariable(name = "id") long optionId) {
         optionService.deleteOptionById(optionId);
         return ResponseEntity.ok("The option was successfully deleted");
     }

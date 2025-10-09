@@ -7,11 +7,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.GenericGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -21,9 +19,8 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Member {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @Column(unique = true, updatable = false)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
     @Column(name = "user_id", nullable = false)
     private long userId;

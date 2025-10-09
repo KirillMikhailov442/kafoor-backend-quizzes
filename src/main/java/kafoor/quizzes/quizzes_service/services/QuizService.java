@@ -6,7 +6,6 @@ import kafoor.quizzes.quizzes_service.dtos.QuizUpdateReqDTO;
 import kafoor.quizzes.quizzes_service.exceptions.Conflict;
 import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.models.Quiz;
-import kafoor.quizzes.quizzes_service.repositories.MemberRepo;
 import kafoor.quizzes.quizzes_service.repositories.QuizRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class QuizService {
@@ -27,7 +25,7 @@ public class QuizService {
         return quizRepo.findByUserId(userId);
     }
 
-    public Quiz findQuizById(UUID id) {
+    public Quiz findQuizById(long id) {
         return quizRepo.findById(id).orElseThrow(() -> new NotFound("Quiz not found"));
     }
 
@@ -48,7 +46,7 @@ public class QuizService {
         return quizRepo.save(quiz);
     }
 
-    public void deleteQuizById(UUID id) {
+    public void deleteQuizById(long id) {
         if (quizRepo.existsById(id))
             throw new NotFound("Quiz not found");
         quizRepo.deleteById(id);
@@ -60,7 +58,7 @@ public class QuizService {
         memberService.addMembers(quiz, dto.getUsers());
     }
 
-    public void finishQuiz(UUID id) {
+    public void finishQuiz(long id) {
         Quiz quiz = findQuizById(id);
         quiz.setEndedAt(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
     }

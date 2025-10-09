@@ -8,9 +8,6 @@ import kafoor.quizzes.quizzes_service.models.Member;
 import kafoor.quizzes.quizzes_service.models.Quiz;
 import kafoor.quizzes.quizzes_service.services.MemberService;
 import kafoor.quizzes.quizzes_service.services.QuizService;
-
-import java.util.UUID;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +23,7 @@ public class MemberController {
     private QuizService quizService;
 
     @GetMapping("/members/{id}")
-    public ResponseEntity<Member> getOneMember(@PathVariable(name = "id") UUID memberId) {
+    public ResponseEntity<Member> getOneMember(@PathVariable(name = "id") long memberId) {
         return ResponseEntity.ok(memberService.findMemberById(memberId));
     }
 

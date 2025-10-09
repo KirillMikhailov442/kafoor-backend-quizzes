@@ -1,15 +1,13 @@
 package kafoor.quizzes.quizzes_service.dtos;
 
-import java.util.UUID;
-
 import jakarta.validation.constraints.*;
 import kafoor.quizzes.quizzes_service.constants.MemberConstants;
 import lombok.Getter;
 
 @Getter
 public class QuizUpdateReqDTO {
-    @NotNull(message = " ID is mandatory")
-    private UUID id;
+    @NotBlank(message = " ID is mandatory")
+    private long id;
 
     @NotBlank(message = "Name is mandatory")
     private String name;

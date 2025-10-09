@@ -11,8 +11,8 @@ import lombok.Getter;
 
 @Getter
 public class QuestionUpdateDTO {
-    @NotNull(message = " ID is mandatory")
-    private UUID id;
+    @NotBlank(message = " ID is mandatory")
+    private long id;
 
     @NotBlank(message = "Text is mandatory")
     private String text;
@@ -27,5 +27,8 @@ public class QuestionUpdateDTO {
     @Max(value = QuestionConstants.MAX_TIME_LIMIT, message = "must be less than " + QuestionConstants.MAX_TIME_LIMIT)
     private byte timeLimit;
 
-    private UUID quizId;
+    private long quizId;
+
+    @NotBlank(message = "client ID is mandatory")
+    private UUID clientId;
 }

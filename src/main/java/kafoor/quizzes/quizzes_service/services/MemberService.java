@@ -9,14 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class MemberService {
     @Autowired
     private MemberRepo memberRepo;
 
-    public Member findMemberById(UUID id) {
+    public Member findMemberById(long id) {
         return memberRepo.findById(id).orElseThrow(() -> new NotFound("Member not found"));
     }
 
@@ -54,7 +53,7 @@ public class MemberService {
         return memberRepo.saveAll(members);
     }
 
-    public void removeMember(UUID memberId) {
+    public void removeMember(long memberId) {
         if (memberRepo.existsById(memberId))
             throw new NotFound("Member not found");
         memberRepo.deleteById(memberId);

@@ -14,9 +14,6 @@ public class QuestionCreateReqDTO {
     @NotNull(message = "Text is mandatory")
     private String text;
 
-    @NotBlank(message = "question ID is mandatory")
-    private UUID questionId;
-
     @NotNull(message = "maximum number of participants is mandatory")
     @Min(value = 1, message = "must be more than 0")
     @Max(value = QuestionConstants.MAX_SCORES, message = "must be less than " + QuestionConstants.MAX_SCORES)
@@ -28,5 +25,8 @@ public class QuestionCreateReqDTO {
     private byte timeLimit;
 
     @NotBlank(message = "quiz ID is mandatory")
-    private UUID quizId;
+    private long quizId;
+
+    @NotBlank(message = "client ID is mandatory")
+    private UUID clientId;
 }

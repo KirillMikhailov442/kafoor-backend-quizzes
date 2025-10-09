@@ -25,11 +25,11 @@ public class OptionService {
     @Autowired
     private QuestionOptionRepo questionOptionRepo;
 
-    public List<Option> findAllOptionsOfQuestion(UUID questionId) {
+    public List<Option> findAllOptionsOfQuestion(long questionId) {
         return questionOptionRepo.findOptionsByQuestionId(questionId);
     }
 
-    public Option findOptionById(UUID id) {
+    public Option findOptionById(long id) {
         return optionRepo.findById(id).orElseThrow(() -> new NotFound("Option not found"));
     }
 
@@ -38,7 +38,7 @@ public class OptionService {
         Question question = questionService.findQuestionById(dto.getQuestionId());
         Option newOption = Option.builder()
                 .text(dto.getText())
-                .id(dto.getOptionId())
+                .clientId(dto.getClientId())
                 .build();
         Option option = optionRepo.save(newOption);
         QuestionsOption newQuestionsOption = QuestionsOption.builder()
@@ -60,13 +60,10 @@ public class OptionService {
         if (dto.getText() != null && dto.getText().isEmpty())
             option.setText(dto.getText());
 
-        if (option.getId() == null) {
-            option.setId(dto.getId());
-        }
         return optionRepo.save(option);
     }
 
-    public void deleteOptionById(UUID id) {
+    public void deleteOptionById(long id) {
         if (optionRepo.existsById(id))
             throw new NotFound("Option not found");
         optionRepo.deleteById(id);

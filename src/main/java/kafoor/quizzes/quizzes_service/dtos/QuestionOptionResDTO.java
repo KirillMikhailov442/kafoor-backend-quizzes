@@ -7,13 +7,12 @@ import lombok.Data;
 
 @Data
 public class QuestionOptionResDTO {
-    private UUID id;
+    private UUID clientId;
     private String text;
     private String img;
     private boolean isCorrect;
 
     public QuestionOptionResDTO(QuestionsOption questionsOption) {
-        id = questionsOption.getId();
         text = questionsOption.getOption().getText();
         img = questionsOption.getOption().getImg();
         isCorrect = questionsOption.isCorrect();

@@ -11,7 +11,8 @@ import kafoor.quizzes.quizzes_service.repositories.QuestionOptionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.beans.Transient;
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +33,7 @@ public class OptionService {
         return optionRepo.findById(id).orElseThrow(() -> new NotFound("Option not found"));
     }
 
-    @Transient
+    @Transactional
     public Option addOptionToQuestion(OptionCreateReqDTO dto) {
         Question question = questionService.findQuestionById(dto.getQuestionId());
         Option newOption = Option.builder()
@@ -53,10 +54,15 @@ public class OptionService {
 
     }
 
+    @Transactional
     public Option updateOption(OptionUpdateReqDTO dto) {
-        Option option = findOptionById(dto.getId());
+        Option option = optionRepo.findById(dto.getId()).orElse(new Option());
         if (dto.getText() != null && dto.getText().isEmpty())
             option.setText(dto.getText());
+
+        if (option.getId() == null) {
+            option.setId(dto.getId());
+        }
         return optionRepo.save(option);
     }
 

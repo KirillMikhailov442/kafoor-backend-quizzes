@@ -11,7 +11,7 @@ import lombok.Getter;
 
 @Getter
 public class QuestionCreateReqDTO {
-    @NotBlank(message = "Text is mandatory")
+    @NotNull(message = "Text is mandatory")
     private String text;
 
     @NotBlank(message = "question ID is mandatory")

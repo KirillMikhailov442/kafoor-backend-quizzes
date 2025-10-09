@@ -47,11 +47,17 @@ public class QuestionService {
         Quiz quiz = quizService.findQuizById(dto.getQuizId());
         if (quiz.getUserId() != userId)
             throw new Conflict("This question does not belong to you");
-        Question question = findQuestionById(dto.getId());
+        Question question = questionRepo.findById(dto.getId()).orElse(new Question());
+
         if (dto.getText().isBlank())
             question.setText(dto.getText());
+
         if (dto.getTimeLimit() != 0)
             question.setTimelimit((dto.getTimeLimit()));
+
+        if (question.getId() == null)
+            question.setId(dto.getId());
+
         question.setScores(dto.getScores());
         return questionRepo.save(question);
     }

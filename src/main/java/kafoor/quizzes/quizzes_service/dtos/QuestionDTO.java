@@ -13,13 +13,13 @@ public class QuestionDTO {
     private int scores;
     private List<QuestionOptionResDTO> options;
     private byte timeLimit;
-    private UUID clientId;
+    private UUID slug;
 
     public QuestionDTO(Question question) {
         text = question.getText();
         scores = question.getScores();
         timeLimit = question.getTimelimit();
-        clientId = question.getClientId();
+        slug = question.getSlug();
         options = Optional.ofNullable(question.getOptions())
                 .orElseGet(List::of)
                 .stream()

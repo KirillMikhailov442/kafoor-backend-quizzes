@@ -53,4 +53,10 @@ public class QuestionController {
         questionService.deleteQuestionById(questionId);
         return ResponseEntity.ok("The question was successfully deleted");
     }
+
+    @DeleteMapping("/questions/slug/{slug}")
+    public ResponseEntity<String> deleteQuestionBySlug(@PathVariable UUID slug) {
+        questionService.deleteQuestionBySlug(slug);
+        return ResponseEntity.ok("The question was successfully deleted");
+    }
 }

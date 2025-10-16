@@ -8,15 +8,15 @@ import lombok.Getter;
 
 @Getter
 public class OptionCreateReqDTO {
-    @NotNull(message = "Question ID is mandatory")
+    @NotBlank(message = "slug is mandatory")
+    private UUID slug;
+
+    @NotNull(message = "question ID is mandatory")
     private long questionId;
 
-    @NotBlank(message = "client ID is mandatory")
-    private UUID clientId;
-
-    @NotBlank(message = "Text is mandatory")
+    @NotBlank(message = "text is mandatory")
     private String text;
 
-    @NotNull(message = "isCorrect is mandatory")
+    @NotNull(message = "is correct is mandatory")
     private boolean isCorrect;
 }

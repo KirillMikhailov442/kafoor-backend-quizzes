@@ -11,7 +11,10 @@ import lombok.Getter;
 
 @Getter
 public class QuestionCreateReqDTO {
-    @NotNull(message = "Text is mandatory")
+    @NotBlank(message = "slug is mandatory")
+    private UUID slug;
+
+    @NotNull(message = "text is mandatory")
     private String text;
 
     @NotNull(message = "maximum number of participants is mandatory")
@@ -26,7 +29,4 @@ public class QuestionCreateReqDTO {
 
     @NotBlank(message = "quiz ID is mandatory")
     private long quizId;
-
-    @NotBlank(message = "client ID is mandatory")
-    private UUID clientId;
 }

@@ -22,8 +22,8 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "client_id", unique = true)
-    private UUID clientId;
+    @Column(nullable = false, unique = true)
+    private UUID slug;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionsOption> options = new ArrayList<>();

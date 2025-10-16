@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class QuestionService {
@@ -35,7 +36,7 @@ public class QuestionService {
         Question newQuestion = Question.builder()
                 .text(dto.getText())
                 .scores(dto.getScores())
-                .clientId(dto.getClientId())
+                .slug(dto.getSlug())
                 .timelimit(dto.getTimeLimit())
                 .quiz(quiz)
                 .build();
@@ -46,7 +47,7 @@ public class QuestionService {
         Quiz quiz = quizService.findQuizById(dto.getQuizId());
         if (quiz.getUserId() != userId)
             throw new Conflict("This question does not belong to you");
-        Question question = questionRepo.findById(dto.getId()).orElse(new Question());
+        Question question = questionRepo.findBySlug(dto.getSlug()).orElse(new Question());
 
         if (dto.getText().isBlank())
             question.setText(dto.getText());
@@ -62,5 +63,11 @@ public class QuestionService {
         if (questionRepo.existsById(id))
             throw new NotFound("Question not found");
         questionRepo.deleteById(id);
+    }
+
+    public void deleteQuestionBySlug(UUID slug) {
+        if (questionRepo.existsBySlug(slug))
+            throw new NotFound("Question not found");
+        questionRepo.deleteBySlug(slug);
     }
 }

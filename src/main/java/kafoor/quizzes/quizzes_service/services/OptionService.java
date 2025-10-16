@@ -38,7 +38,7 @@ public class OptionService {
         Question question = questionService.findQuestionById(dto.getQuestionId());
         Option newOption = Option.builder()
                 .text(dto.getText())
-                .clientId(dto.getClientId())
+                .slug(dto.getSlug())
                 .build();
         Option option = optionRepo.save(newOption);
         QuestionsOption newQuestionsOption = QuestionsOption.builder()
@@ -56,7 +56,7 @@ public class OptionService {
 
     @Transactional
     public Option updateOption(OptionUpdateReqDTO dto) {
-        Option option = optionRepo.findById(dto.getId()).orElse(new Option());
+        Option option = optionRepo.findBySlug(dto.getSlug()).orElse(new Option());
         if (dto.getText() != null && dto.getText().isEmpty())
             option.setText(dto.getText());
 
@@ -67,5 +67,11 @@ public class OptionService {
         if (optionRepo.existsById(id))
             throw new NotFound("Option not found");
         optionRepo.deleteById(id);
+    }
+
+    public void deleteOptionBySlug(UUID slug) {
+        if (optionRepo.existsBySlug(slug))
+            throw new NotFound("Option not found");
+        optionRepo.deleteBySlug(slug);
     }
 }

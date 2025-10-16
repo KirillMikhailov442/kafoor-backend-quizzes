@@ -47,4 +47,10 @@ public class OptionController {
         optionService.deleteOptionById(optionId);
         return ResponseEntity.ok("The option was successfully deleted");
     }
+
+    @DeleteMapping("/options/slug/{slug}")
+    public ResponseEntity<String> deleteOptionBySlug(@PathVariable UUID slug) {
+        optionService.deleteOptionBySlug(slug);
+        return ResponseEntity.ok("The option was successfully deleted");
+    }
 }

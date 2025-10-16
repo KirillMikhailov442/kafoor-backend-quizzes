@@ -22,8 +22,8 @@ public class Option {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "client_id", unique = true)
-    private UUID clientId;
+    @Column(nullable = false, unique = true)
+    private UUID slug;
 
     @JsonIgnore
     @OneToMany(mappedBy = "option", fetch = FetchType.LAZY)

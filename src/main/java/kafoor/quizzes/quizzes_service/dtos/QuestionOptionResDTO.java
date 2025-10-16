@@ -7,7 +7,7 @@ import lombok.Data;
 
 @Data
 public class QuestionOptionResDTO {
-    private UUID clientId;
+    private UUID slug;
     private String text;
     private String img;
     private boolean isCorrect;

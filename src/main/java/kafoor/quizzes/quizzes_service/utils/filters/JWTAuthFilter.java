@@ -5,7 +5,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.utils.jwt.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,30 +27,31 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     private JWTUtils jwtUtils;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
         String accessToken = null;
         String username = null;
 
-        if(authHeader != null
+        if (authHeader != null
                 && !authHeader.substring(7).trim().equals("null")
                 && authHeader.substring(7).trim() != null
-                && authHeader.startsWith("Bearer ")){
+                && authHeader.startsWith("Bearer ")) {
             accessToken = authHeader.substring(7);
-            if (!jwtUtils.validateToken(accessToken)){
-                System.out.println("ВАЛИД");
+            if (!jwtUtils.validateToken(accessToken)) {
                 username = jwtUtils.getUsernameFromToken(accessToken);
             }
         }
 
-        if(username != null && SecurityContextHolder.getContext().getAuthentication() == null){
-            if(!jwtUtils.validateToken(accessToken)){
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (!jwtUtils.validateToken(accessToken)) {
                 Claims claims = jwtUtils.getClaimsFromToken(accessToken);
                 List<Map<String, String>> roles = (List<Map<String, String>>) claims.get("roles");
                 Collection<? extends GrantedAuthority> authorities = roles.stream()
                         .map(roleMap -> new SimpleGrantedAuthority(roleMap.get("authority")))
                         .collect(Collectors.toList());
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                        username, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }

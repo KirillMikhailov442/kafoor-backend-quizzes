@@ -4,17 +4,15 @@ import java.util.UUID;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import kafoor.quizzes.quizzes_service.constants.QuestionConstants;
 import lombok.Getter;
 
 @Getter
 public class QuestionCreateReqDTO {
-    @NotBlank(message = "slug is mandatory")
+    @NotNull(message = "slug is mandatory")
     private UUID slug;
 
-    @NotNull(message = "text is mandatory")
     private String text;
 
     @NotNull(message = "maximum number of participants is mandatory")
@@ -27,6 +25,6 @@ public class QuestionCreateReqDTO {
     @Max(value = QuestionConstants.MAX_TIME_LIMIT, message = "must be less than " + QuestionConstants.MAX_TIME_LIMIT)
     private byte timeLimit;
 
-    @NotBlank(message = "quiz ID is mandatory")
+    @NotNull(message = "quiz ID is mandatory")
     private long quizId;
 }

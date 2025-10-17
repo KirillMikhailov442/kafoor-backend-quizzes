@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "Member", description = "Official member API")
+@Tag(name = "Member")
 @SecurityRequirement(name = "JWT")
 @RestController
 @RequestMapping("/api/v1")

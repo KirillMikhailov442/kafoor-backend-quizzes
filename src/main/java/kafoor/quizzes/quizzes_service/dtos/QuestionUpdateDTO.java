@@ -4,17 +4,15 @@ import java.util.UUID;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import kafoor.quizzes.quizzes_service.constants.QuestionConstants;
 import lombok.Getter;
 
 @Getter
 public class QuestionUpdateDTO {
-    @NotBlank(message = "slug is mandatory")
+    @NotNull(message = "slug is mandatory")
     private UUID slug;
 
-    @NotBlank(message = "text is mandatory")
     private String text;
 
     @NotNull(message = "maximum number of participants is mandatory")

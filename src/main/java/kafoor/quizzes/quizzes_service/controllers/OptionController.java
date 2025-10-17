@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Tag(name = "Option", description = "Official option API")
+@Tag(name = "Option")
 @SecurityRequirement(name = "JWT")
 @RestController
 @RequestMapping("/api/v1")

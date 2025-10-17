@@ -13,6 +13,7 @@ public class QuestionOptionResDTO {
     private boolean isCorrect;
 
     public QuestionOptionResDTO(QuestionsOption questionsOption) {
+        slug = questionsOption.getOption().getSlug();
         text = questionsOption.getOption().getText();
         img = questionsOption.getOption().getImg();
         isCorrect = questionsOption.isCorrect();

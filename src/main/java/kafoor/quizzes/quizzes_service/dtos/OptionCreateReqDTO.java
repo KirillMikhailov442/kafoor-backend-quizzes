@@ -2,19 +2,21 @@ package kafoor.quizzes.quizzes_service.dtos;
 
 import java.util.UUID;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
+@Builder
 public class OptionCreateReqDTO {
-    @NotBlank(message = "slug is mandatory")
+    @NotNull(message = "slug is mandatory")
     private UUID slug;
 
-    @NotNull(message = "question ID is mandatory")
-    private long questionId;
+    @NotNull(message = "question slug is mandatory")
+    private UUID questionSlug;
 
-    @NotBlank(message = "text is mandatory")
     private String text;
 
     @NotNull(message = "is correct is mandatory")

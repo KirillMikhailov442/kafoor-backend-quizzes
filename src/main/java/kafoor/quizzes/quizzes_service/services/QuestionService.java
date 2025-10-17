@@ -29,6 +29,10 @@ public class QuestionService {
         return questionRepo.findById(id).orElseThrow(() -> new NotFound("Question not found"));
     }
 
+    public Question findQuestionBySlug(UUID slug) {
+        return questionRepo.findBySlug(slug).orElseThrow(() -> new NotFound("Question not found"));
+    }
+
     public Question createQuestion(QuestionCreateReqDTO dto, long userId) {
         Quiz quiz = quizService.findQuizById(dto.getQuizId());
         if (quiz.getUserId() != userId)

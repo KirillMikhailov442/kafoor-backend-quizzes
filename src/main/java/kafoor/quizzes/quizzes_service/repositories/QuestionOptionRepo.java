@@ -20,4 +20,6 @@ public interface QuestionOptionRepo extends JpaRepository<QuestionsOption, Long>
     QuestionsOption findByQuestion(Question question);
 
     QuestionsOption findByOption(Option option);
+
+    QuestionsOption findByQuestionAndOption(Question question, Option option);
 }

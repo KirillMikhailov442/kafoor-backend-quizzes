@@ -9,6 +9,7 @@ import java.util.Optional;
 
 @Data
 public class QuizDTO {
+    private long id;
     private String name;
     private int maxMembers;
     private List<QuestionDTO> questions;
@@ -20,6 +21,7 @@ public class QuizDTO {
     private long userId;
 
     public QuizDTO(Quiz quiz) {
+        id = quiz.getId();
         name = quiz.getName();
         maxMembers = quiz.getMaxMembers();
         questions = Optional.ofNullable(quiz.getQuestions())

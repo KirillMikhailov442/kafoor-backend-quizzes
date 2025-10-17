@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,7 +36,7 @@ public class OptionService {
 
     @Transactional
     public Option addOptionToQuestion(OptionCreateReqDTO dto) {
-        Question question = questionService.findQuestionById(dto.getQuestionId());
+        Question question = questionService.findQuestionBySlug(dto.getQuestionSlug());
         Option newOption = Option.builder()
                 .text(dto.getText())
                 .slug(dto.getSlug())
@@ -56,11 +57,21 @@ public class OptionService {
 
     @Transactional
     public Option updateOption(OptionUpdateReqDTO dto) {
-        Option option = optionRepo.findBySlug(dto.getSlug()).orElse(new Option());
-        if (dto.getText() != null && dto.getText().isEmpty())
-            option.setText(dto.getText());
-
-        return optionRepo.save(option);
+        Optional<Option> option = optionRepo.findBySlug(dto.getSlug());
+        if (option.isEmpty()) {
+            OptionCreateReqDTO optionCreate = OptionCreateReqDTO.builder()
+                    .slug(dto.getSlug())
+                    .questionSlug(dto.getQuestionSlug())
+                    .text(dto.getText())
+                    .isCorrect(dto.isCorrect())
+                    .build();
+            return addOptionToQuestion(optionCreate);
+        } else {
+            Option exisOption = optionRepo.findBySlug(dto.getSlug()).get();
+            if (dto.getText() != null && dto.getText().isEmpty())
+                exisOption.setText(dto.getText());
+            return optionRepo.save(exisOption);
+        }
     }
 
     public void deleteOptionById(long id) {

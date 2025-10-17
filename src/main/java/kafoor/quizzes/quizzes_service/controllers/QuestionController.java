@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
-@Tag(name = "Question", description = "Official question API")
+@Tag(name = "Question")
 @SecurityRequirement(name = "JWT")
 @RestController
 @RequestMapping("/api/v1")

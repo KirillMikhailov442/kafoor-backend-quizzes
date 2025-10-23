@@ -15,7 +15,6 @@ import jakarta.transaction.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class OptionService {
@@ -80,7 +79,7 @@ public class OptionService {
         optionRepo.deleteById(id);
     }
 
-    public void deleteOptionBySlug(UUID slug) {
+    public void deleteOptionBySlug(String slug) {
         if (optionRepo.existsBySlug(slug))
             throw new NotFound("Option not found");
         optionRepo.deleteBySlug(slug);

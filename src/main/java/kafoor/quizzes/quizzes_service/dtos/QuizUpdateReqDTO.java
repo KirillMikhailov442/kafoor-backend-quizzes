@@ -6,10 +6,10 @@ import lombok.Getter;
 
 @Getter
 public class QuizUpdateReqDTO {
-    @NotBlank(message = " ID is mandatory")
+    @NotNull(message = " ID is mandatory")
     private long id;
 
-    @NotBlank(message = "Name is mandatory")
+    @NotBlank(message = "name is mandatory")
     private String name;
 
     @NotNull(message = "maximum number of participants is mandatory")

@@ -14,7 +14,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Tag(name = "Question")
 @SecurityRequirement(name = "JWT")
@@ -55,7 +54,7 @@ public class QuestionController {
     }
 
     @DeleteMapping("/questions/slug/{slug}")
-    public ResponseEntity<String> deleteQuestionBySlug(@PathVariable UUID slug) {
+    public ResponseEntity<String> deleteQuestionBySlug(@PathVariable String slug) {
         questionService.deleteQuestionBySlug(slug);
         return ResponseEntity.ok("The question was successfully deleted");
     }

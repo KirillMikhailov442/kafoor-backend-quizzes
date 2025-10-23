@@ -29,6 +29,10 @@ public class QuizService {
         return quizRepo.findById(id).orElseThrow(() -> new NotFound("Quiz not found"));
     }
 
+    public Quiz findQuizByIdWithoutEx(long id) {
+        return quizRepo.findById(id).get();
+    }
+
     public Quiz createQuiz(QuizCreateReqDTO dto, long userId) {
         Quiz newQuiz = Quiz.builder().name(dto.getName())
                 .maxMembers(dto.getMaxMembers())

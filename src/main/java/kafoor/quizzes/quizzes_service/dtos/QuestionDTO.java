@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Data
 public class QuestionDTO {
@@ -13,7 +12,7 @@ public class QuestionDTO {
     private int scores;
     private List<QuestionOptionResDTO> options;
     private byte timeLimit;
-    private UUID slug;
+    private String slug;
 
     public QuestionDTO(Question question) {
         text = question.getText();

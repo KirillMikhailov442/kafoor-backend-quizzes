@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Tag(name = "Option")
 @SecurityRequirement(name = "JWT")
@@ -49,7 +48,7 @@ public class OptionController {
     }
 
     @DeleteMapping("/options/slug/{slug}")
-    public ResponseEntity<String> deleteOptionBySlug(@PathVariable UUID slug) {
+    public ResponseEntity<String> deleteOptionBySlug(@PathVariable String slug) {
         optionService.deleteOptionBySlug(slug);
         return ResponseEntity.ok("The option was successfully deleted");
     }

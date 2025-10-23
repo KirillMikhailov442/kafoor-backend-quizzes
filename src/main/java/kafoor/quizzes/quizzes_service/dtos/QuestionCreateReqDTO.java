@@ -1,7 +1,5 @@
 package kafoor.quizzes.quizzes_service.dtos;
 
-import java.util.UUID;
-
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +9,7 @@ import lombok.Getter;
 @Getter
 public class QuestionCreateReqDTO {
     @NotNull(message = "slug is mandatory")
-    private UUID slug;
+    private String slug;
 
     private String text;
 

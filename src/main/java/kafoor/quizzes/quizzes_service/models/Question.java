@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 @Builder
@@ -25,7 +24,7 @@ public class Question {
     private long id;
 
     @Column(nullable = false, unique = true)
-    private UUID slug;
+    private String slug;
 
     @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
     private List<QuestionsOption> options = new ArrayList<>();

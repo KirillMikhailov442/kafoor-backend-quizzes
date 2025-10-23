@@ -10,8 +10,9 @@ import kafoor.quizzes.quizzes_service.repositories.QuestionRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
+
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class QuestionService {
@@ -29,12 +30,12 @@ public class QuestionService {
         return questionRepo.findById(id).orElseThrow(() -> new NotFound("Question not found"));
     }
 
-    public Question findQuestionBySlug(UUID slug) {
+    public Question findQuestionBySlug(String slug) {
         return questionRepo.findBySlug(slug).orElseThrow(() -> new NotFound("Question not found"));
     }
 
     public Question createQuestion(QuestionCreateReqDTO dto, long userId) {
-        Quiz quiz = quizService.findQuizById(dto.getQuizId());
+        Quiz quiz = quizService.findQuizByIdWithoutEx(dto.getQuizId());
         if (quiz.getUserId() != userId)
             throw new Conflict("This question does not belong to you");
         Question newQuestion = Question.builder()
@@ -49,17 +50,17 @@ public class QuestionService {
 
     public Question updateQuestion(QuestionUpdateDTO dto, long userId) {
         Quiz quiz = quizService.findQuizById(dto.getQuizId());
+
         if (quiz.getUserId() != userId)
             throw new Conflict("This question does not belong to you");
         Question question = questionRepo.findBySlug(dto.getSlug()).orElse(new Question());
 
-        if (dto.getText().isBlank())
-            question.setText(dto.getText());
-
-        if (dto.getTimeLimit() != 0)
-            question.setTimelimit((dto.getTimeLimit()));
-
+        question.setText(dto.getText());
+        question.setTimelimit((dto.getTimeLimit()));
+        question.setQuiz(quiz);
+        question.setSlug(dto.getSlug());
         question.setScores(dto.getScores());
+
         return questionRepo.save(question);
     }
 
@@ -69,8 +70,9 @@ public class QuestionService {
         questionRepo.deleteById(id);
     }
 
-    public void deleteQuestionBySlug(UUID slug) {
-        if (questionRepo.existsBySlug(slug))
+    @Transactional
+    public void deleteQuestionBySlug(String slug) {
+        if (!questionRepo.existsBySlug(slug))
             throw new NotFound("Question not found");
         questionRepo.deleteBySlug(slug);
     }

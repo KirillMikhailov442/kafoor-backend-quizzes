@@ -51,7 +51,7 @@ public class QuizService {
     }
 
     public void deleteQuizById(long id) {
-        if (quizRepo.existsById(id))
+        if (!quizRepo.existsById(id))
             throw new NotFound("Quiz not found");
         quizRepo.deleteById(id);
     }

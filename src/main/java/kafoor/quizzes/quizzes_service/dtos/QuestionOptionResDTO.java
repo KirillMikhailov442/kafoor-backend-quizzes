@@ -8,12 +8,12 @@ public class QuestionOptionResDTO {
     private String slug;
     private String text;
     private String img;
-    private boolean isCorrect;
+    private boolean correct;
 
     public QuestionOptionResDTO(QuestionsOption questionsOption) {
         slug = questionsOption.getOption().getSlug();
         text = questionsOption.getOption().getText();
         img = questionsOption.getOption().getImg();
-        isCorrect = questionsOption.isCorrect();
+        correct = questionsOption.isCorrect();
     }
 }

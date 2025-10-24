@@ -7,6 +7,7 @@ import kafoor.quizzes.quizzes_service.dtos.OptionCreateReqDTO;
 import kafoor.quizzes.quizzes_service.dtos.OptionUpdateReqDTO;
 import kafoor.quizzes.quizzes_service.models.Option;
 import kafoor.quizzes.quizzes_service.services.OptionService;
+import kafoor.quizzes.quizzes_service.services.QuestionsOptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,10 +21,12 @@ import java.util.List;
 public class OptionController {
     @Autowired
     private OptionService optionService;
+    @Autowired
+    private QuestionsOptionService questionsOptionService;
 
     @GetMapping("/options-of-question/{id}")
     public ResponseEntity<List<Option>> getAllOptionsOfQuestion(@PathVariable(name = "id") long questionId) {
-        return ResponseEntity.ok(optionService.findAllOptionsOfQuestion(questionId));
+        return ResponseEntity.ok(questionsOptionService.findAllOptionsOfQuestion(questionId));
     }
 
     @GetMapping("/options/{id}")
@@ -38,6 +41,7 @@ public class OptionController {
 
     @PutMapping("/options")
     public ResponseEntity<Option> updateOption(@Valid @RequestBody OptionUpdateReqDTO dto) {
+        System.out.println(dto.isCorrect());
         return ResponseEntity.ok(optionService.updateOption(dto));
     }
 

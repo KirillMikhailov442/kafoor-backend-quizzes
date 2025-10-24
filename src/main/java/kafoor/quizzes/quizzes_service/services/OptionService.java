@@ -23,11 +23,7 @@ public class OptionService {
     @Autowired
     private QuestionService questionService;
     @Autowired
-    private QuestionOptionRepo questionOptionRepo;
-
-    public List<Option> findAllOptionsOfQuestion(long questionId) {
-        return questionOptionRepo.findOptionsByQuestionId(questionId);
-    }
+    private QuestionsOptionService QOService;
 
     public Option findOptionById(long id) {
         return optionRepo.findById(id).orElseThrow(() -> new NotFound("Option not found"));
@@ -46,7 +42,7 @@ public class OptionService {
                 .option(option)
                 .isCorrect(dto.isCorrect())
                 .build();
-        questionOptionRepo.save(newQuestionsOption);
+        QOService.save(newQuestionsOption);
         return option;
     }
 
@@ -57,30 +53,33 @@ public class OptionService {
     @Transactional
     public Option updateOption(OptionUpdateReqDTO dto) {
         Optional<Option> option = optionRepo.findBySlug(dto.getSlug());
+        Question question = questionService.findQuestionBySlug(dto.getQuestionSlug());
+
         if (option.isEmpty()) {
             OptionCreateReqDTO optionCreate = OptionCreateReqDTO.builder()
                     .slug(dto.getSlug())
                     .questionSlug(dto.getQuestionSlug())
                     .text(dto.getText())
-                    .isCorrect(dto.isCorrect())
+                    .correct(dto.isCorrect())
                     .build();
             return addOptionToQuestion(optionCreate);
         } else {
             Option exisOption = optionRepo.findBySlug(dto.getSlug()).get();
-            if (dto.getText() != null && dto.getText().isEmpty())
-                exisOption.setText(dto.getText());
+            exisOption.setText(dto.getText());
+            QOService.changeIsCorrect(question, option.get(), dto.isCorrect());
             return optionRepo.save(exisOption);
         }
     }
 
     public void deleteOptionById(long id) {
-        if (optionRepo.existsById(id))
+        if (!optionRepo.existsById(id))
             throw new NotFound("Option not found");
         optionRepo.deleteById(id);
     }
 
+    @Transactional
     public void deleteOptionBySlug(String slug) {
-        if (optionRepo.existsBySlug(slug))
+        if (!optionRepo.existsBySlug(slug))
             throw new NotFound("Option not found");
         optionRepo.deleteBySlug(slug);
     }

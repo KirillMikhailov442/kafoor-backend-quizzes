@@ -26,7 +26,7 @@ public class Question {
     @Column(nullable = false, unique = true)
     private String slug;
 
-    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionsOption> options = new ArrayList<>();
 
     @Column(name = "time_limit", nullable = false)

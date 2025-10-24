@@ -17,6 +17,6 @@ public class OptionCreateReqDTO {
 
     private String text;
 
-    @NotNull(message = "is correct is mandatory")
-    private boolean isCorrect;
+    @NotNull(message = "correct is mandatory")
+    private boolean correct;
 }

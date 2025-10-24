@@ -65,7 +65,7 @@ public class QuestionService {
     }
 
     public void deleteQuestionById(long id) {
-        if (questionRepo.existsById(id))
+        if (!questionRepo.existsById(id))
             throw new NotFound("Question not found");
         questionRepo.deleteById(id);
     }

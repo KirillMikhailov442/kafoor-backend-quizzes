@@ -27,7 +27,7 @@ public class Option {
     private String slug;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "option", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "option", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<QuestionsOption> questions = new ArrayList<>();
 
     @Column(name = "text", length = 64, nullable = false)

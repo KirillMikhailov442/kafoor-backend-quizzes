@@ -1,27 +1,24 @@
 package kafoor.quizzes.quizzes_service.configs;
 
 import com.corundumstudio.socketio.Configuration;
-import com.corundumstudio.socketio.SocketIOClient;
 import com.corundumstudio.socketio.SocketIOServer;
 import jakarta.annotation.PreDestroy;
 import kafoor.quizzes.quizzes_service.constants.SocketAction;
-import kafoor.quizzes.quizzes_service.dtos.QuizStartDTO;
-import kafoor.quizzes.quizzes_service.exceptions.Conflict;
-import kafoor.quizzes.quizzes_service.models.Quiz;
 import kafoor.quizzes.quizzes_service.services.QuizService;
 import kafoor.quizzes.quizzes_service.services.RedisService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @Component
+@Getter
 public class SocketIOConfig {
     @Value("${socket.host}")
     private String host;
@@ -67,7 +64,7 @@ public class SocketIOConfig {
                     map);
         });
 
-        server.addEventListener(SocketAction.TELL_ABOUT_YOURSELF.getName(), Map.class, (client, data, ackSender) -> {
+        server.addEventListener(SocketAction.TELL_ABOUT_YOURSELF.toString(), Map.class, (client, data, ackSender) -> {
             Map<String, Object> map = new HashMap<>();
             map.put("socketId", client.getSessionId());
             map.put("name", data.get("name"));
@@ -78,15 +75,30 @@ public class SocketIOConfig {
                     map);
         });
 
-        server.addEventListener(SocketAction.LEAVE_FROM_QUIZ.getName(), Map.class, (client, data, ackRequest) -> {
+        server.addEventListener(SocketAction.LEAVE_FROM_QUIZ.toString(), Map.class, (client, data, ackRequest) -> {
             server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.LEAVE_FROM_QUIZ.getName(),
                     client.getSessionId().toString());
             client.leaveRoom(data.get("quizId").toString());
-            // redisService.deleteValue(client.getSessionId().toString());
+            redisService.deleteValue(client.getSessionId().toString());
         });
 
-        server.addEventListener(SocketAction.NEXT_QUESTION.getName(), String.class, (client, data, ackRequest) -> {
-            server.getRoomOperations(data).sendEvent(SocketAction.NEXT_QUESTION.getName());
+        server.addEventListener(SocketAction.TIMER.toString(), Map.class, (client, data, ackRequest) -> {
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.TIMER.getName(),
+                    data.get("timer"));
+        });
+
+        server.addEventListener(SocketAction.NEXT_QUESTION.toString(), Map.class, (client, data, ackRequest) -> {
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.NEXT_QUESTION.getName());
+        });
+
+        server.addEventListener(SocketAction.TELL_CORRECT_ANSWER.toString(), Map.class, (client, data, ackRequest) -> {
+            server.getRoomOperations(data.get("quizId").toString())
+                    .sendEvent(SocketAction.TELL_CORRECT_ANSWER.getName(), data.get("corrects"));
+        });
+
+        server.addEventListener(SocketAction.SAY_MY_ANSWER.toString(), Map.class, (client, data, ackRequest) -> {
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.SAY_MY_ANSWER.getName(),
+                    data.get("selected"));
         });
 
         server.addEventListener(SocketAction.FINISH_QUIZ.toString(), String.class, (client, data, ackRequest) -> {

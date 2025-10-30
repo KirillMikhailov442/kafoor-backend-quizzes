@@ -9,11 +9,14 @@ public enum SocketAction {
     TELL_ABOUT_YOURSELF("TELL_ABOUT_YOURSELF"),
     START_QUIZ("START_QUIZ"),
     FINISH_QUIZ("FINISH_QUIZ"),
-    NEXT_QUESTION("NEXT_QUESTION");
+    NEXT_QUESTION("NEXT_QUESTION"),
+    TIMER("TIMER"),
+    TELL_CORRECT_ANSWER("TELL_CORRECT_ANSWER"),
+    SAY_MY_ANSWER("SAY_MY_ANSWER");
 
     private final String name;
 
-    SocketAction(String name){
+    SocketAction(String name) {
         this.name = name;
     }
 }

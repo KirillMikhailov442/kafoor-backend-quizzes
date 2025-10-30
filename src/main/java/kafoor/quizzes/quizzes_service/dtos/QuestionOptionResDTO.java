@@ -5,12 +5,14 @@ import lombok.Data;
 
 @Data
 public class QuestionOptionResDTO {
+    private long id;
     private String slug;
     private String text;
     private String img;
     private boolean correct;
 
     public QuestionOptionResDTO(QuestionsOption questionsOption) {
+        id = questionsOption.getOption().getId();
         slug = questionsOption.getOption().getSlug();
         text = questionsOption.getOption().getText();
         img = questionsOption.getOption().getImg();

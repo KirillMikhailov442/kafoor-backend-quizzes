@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Data
 public class QuestionDTO {
+    private long id;
     private String text;
     private int scores;
     private List<QuestionOptionResDTO> options;
@@ -15,6 +16,7 @@ public class QuestionDTO {
     private String slug;
 
     public QuestionDTO(Question question) {
+        id = question.getId();
         text = question.getText();
         scores = question.getScores();
         timeLimit = question.getTimelimit();

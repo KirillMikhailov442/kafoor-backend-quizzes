@@ -18,7 +18,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @Tag(name = "Quiz")
 @SecurityRequirement(name = "JWT")
@@ -28,7 +27,7 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
     @Autowired
-    private SocketIOConfig socket;
+    private SocketIOConfig socketIOConfig;
     @Autowired
     private RedisService redisService;
 
@@ -60,18 +59,14 @@ public class QuizController {
     }
 
     @PostMapping("/start")
-    public ResponseEntity<String> startQuiz(@Valid @RequestBody QuizStartDTO dto) {
+    public ResponseEntity<QuizDTO> startQuiz(@Valid @RequestBody QuizStartDTO dto) {
         // quizService.startQuiz(dto);
-        Quiz quiz = quizService.findQuizById(dto.getQuizId());
-        System.out.println("Quiz id: " + quiz.getId());
-        socket.socketIOServer().getRoomOperations(String.valueOf(dto.getQuizId()))
-                .sendEvent(SocketAction.START_QUIZ.name());
+        QuizDTO quizDTO = new QuizDTO(quizService.findQuizById(dto.getQuizId()));
+        System.out.println("Quiz id: " + quizDTO.getId());
+        socketIOConfig.getServer().getRoomOperations(String.valueOf(dto.getQuizId()))
+                .sendEvent(SocketAction.START_QUIZ.getName(), quizDTO.getQuestions().getFirst());
         System.out.println("Мы отправили всем участниками об начлале игры");
-        String authorId = (String) redisService.getValue(String.valueOf(quiz.getUserId()));
-        System.out.println("User id из redis по socket.io id: " + authorId);
-        socket.socketIOServer().getClient(UUID.fromString(authorId)).sendEvent(SocketAction.START_QUIZ.name(), quiz);
-        System.out.println("Мы отправили только авторе об начлале игры и все вопросы");
-        return ResponseEntity.ok("The quiz has begun");
+        return ResponseEntity.ok(quizDTO);
     }
 
     @PostMapping("/finish")

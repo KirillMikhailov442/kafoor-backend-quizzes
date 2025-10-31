@@ -71,38 +71,40 @@ public class SocketIOConfig {
             map.put("userId", data.get("userId"));
             map.put("nickname", data.get("nickname"));
             server.getRoomOperations(data.get("quizId").toString()).sendEvent(
-                    SocketAction.TELL_ABOUT_YOURSELF.getName(),
+                    SocketAction.TELL_ABOUT_YOURSELF.toString(),
                     map);
         });
 
         server.addEventListener(SocketAction.LEAVE_FROM_QUIZ.toString(), Map.class, (client, data, ackRequest) -> {
-            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.LEAVE_FROM_QUIZ.getName(),
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.LEAVE_FROM_QUIZ.toString(),
                     client.getSessionId().toString());
             client.leaveRoom(data.get("quizId").toString());
             redisService.deleteValue(client.getSessionId().toString());
         });
 
         server.addEventListener(SocketAction.TIMER.toString(), Map.class, (client, data, ackRequest) -> {
-            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.TIMER.getName(),
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.TIMER.toString(),
                     data.get("timer"));
         });
 
         server.addEventListener(SocketAction.NEXT_QUESTION.toString(), Map.class, (client, data, ackRequest) -> {
-            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.NEXT_QUESTION.getName());
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.NEXT_QUESTION.toString(),
+                    data.get("question"));
         });
 
         server.addEventListener(SocketAction.TELL_CORRECT_ANSWER.toString(), Map.class, (client, data, ackRequest) -> {
             server.getRoomOperations(data.get("quizId").toString())
-                    .sendEvent(SocketAction.TELL_CORRECT_ANSWER.getName(), data.get("corrects"));
+                    .sendEvent(SocketAction.TELL_CORRECT_ANSWER.toString(), data.get("corrects"));
         });
 
         server.addEventListener(SocketAction.SAY_MY_ANSWER.toString(), Map.class, (client, data, ackRequest) -> {
-            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.SAY_MY_ANSWER.getName(),
-                    data.get("selected"));
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.SAY_MY_ANSWER.toString(),
+                    data);
         });
 
-        server.addEventListener(SocketAction.FINISH_QUIZ.toString(), String.class, (client, data, ackRequest) -> {
-
+        server.addEventListener(SocketAction.FINISH_QUIZ.toString(), Map.class, (client, data, ackRequest) -> {
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.FINISH_QUIZ.toString(),
+                    data.get("rating"));
         });
 
         server.start();

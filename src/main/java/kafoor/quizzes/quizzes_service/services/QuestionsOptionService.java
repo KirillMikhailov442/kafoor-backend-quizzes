@@ -19,7 +19,11 @@ public class QuestionsOptionService {
         return questionOptionRepo.findOptionsByQuestionId(questionId);
     }
 
-    public void changeIsCorrect(Question question, Option option, boolean isCorrect){
+    public QuestionsOption findByQuestionIdAndOptionId(long questionId, long optionId) {
+        return questionOptionRepo.findByQuestionIdAndOptionId(questionId, optionId);
+    }
+
+    public void changeIsCorrect(Question question, Option option, boolean isCorrect) {
         QuestionsOption questionsOption = questionOptionRepo.findByQuestionAndOption(question, option);
         questionsOption.setCorrect(isCorrect);
         System.out.println(questionsOption.getQuestion().getSlug());
@@ -27,7 +31,7 @@ public class QuestionsOptionService {
         questionOptionRepo.save(questionsOption);
     }
 
-    public void save(QuestionsOption questionsOption){
+    public void save(QuestionsOption questionsOption) {
         questionOptionRepo.save(questionsOption);
     }
 }

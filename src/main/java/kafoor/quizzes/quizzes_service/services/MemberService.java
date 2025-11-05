@@ -1,19 +1,33 @@
 package kafoor.quizzes.quizzes_service.services;
 
+import kafoor.quizzes.quizzes_service.dtos.QuizFinishDTO;
 import kafoor.quizzes.quizzes_service.exceptions.Conflict;
 import kafoor.quizzes.quizzes_service.exceptions.NotFound;
 import kafoor.quizzes.quizzes_service.models.Member;
+import kafoor.quizzes.quizzes_service.models.MemberAnswer;
+import kafoor.quizzes.quizzes_service.models.QuestionsOption;
 import kafoor.quizzes.quizzes_service.models.Quiz;
+import kafoor.quizzes.quizzes_service.models.interfaces.UserAnswer;
+import kafoor.quizzes.quizzes_service.repositories.MemberAnswerRepo;
 import kafoor.quizzes.quizzes_service.repositories.MemberRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class MemberService {
     @Autowired
     private MemberRepo memberRepo;
+    @Autowired
+    private QuestionsOptionService qOptionService;
+    @Autowired
+    private MemberAnswerRepo memberAnswerRepo;
+
+    public List<MemberAnswer> findAnswersById(List<Long> membersId) {
+        return memberAnswerRepo.findByMemberIdIn(membersId);
+    }
 
     public Member findMemberById(long id) {
         return memberRepo.findById(id).orElseThrow(() -> new NotFound("Member not found"));
@@ -40,10 +54,9 @@ public class MemberService {
 
     public List<Member> addMembers(Quiz quiz, List<Long> membersId) {
         List<Member> members = membersId.stream().map(member -> {
-            if (existMemberInQuiz(quiz, member))
-                throw new Conflict("You have already been added to the quiz");
-            if (quiz.getMembers().size() >= quiz.getMaxMembers())
-                throw new Conflict("There is no more room in the quiz");
+            // throw new Conflict("You have already been added to the quiz");
+            // if (quiz.getMembers().size() >= quiz.getMaxMembers())
+            // throw new Conflict("There is no more room in the quiz");
 
             return Member.builder()
                     .userId(member)
@@ -59,6 +72,24 @@ public class MemberService {
         memberRepo.deleteById(memberId);
     }
 
-    public void answerMember(long memberId, long optionId) {
+    public void addAnswersMember(QuizFinishDTO dto) {
+        List<MemberAnswer> memberAnswers = new ArrayList<>();
+
+        dto.getAnswers().forEach((userId, answers) -> {
+            Member member = memberRepo.findFirstByUserId(userId);
+            for (UserAnswer userAnswer : answers) {
+                QuestionsOption answer = qOptionService.findByQuestionIdAndOptionId(
+                        userAnswer.getQuestionId(),
+                        userAnswer.getAnswer());
+
+                MemberAnswer memberAnswer = MemberAnswer.builder()
+                        .member(member)
+                        .answer(answer)
+                        .build();
+
+                memberAnswers.add(memberAnswer);
+            }
+        });
+        memberAnswerRepo.saveAll(memberAnswers);
     }
 }

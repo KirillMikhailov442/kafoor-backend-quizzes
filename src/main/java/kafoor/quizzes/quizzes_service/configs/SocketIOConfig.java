@@ -60,7 +60,7 @@ public class SocketIOConfig {
             map.put("name", data.get("name"));
             map.put("userId", data.get("userId"));
             map.put("nickname", data.get("nickname"));
-            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.JOIN_TO_QUIZ.getName(),
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.JOIN_TO_QUIZ.toString(),
                     map);
         });
 
@@ -100,6 +100,11 @@ public class SocketIOConfig {
         server.addEventListener(SocketAction.SAY_MY_ANSWER.toString(), Map.class, (client, data, ackRequest) -> {
             server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.SAY_MY_ANSWER.toString(),
                     data);
+        });
+
+        server.addEventListener(SocketAction.TELL_RATING.toString(), Map.class, (client, data, ackRequest) -> {
+            server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.TELL_RATING.toString(),
+                    data.get("rating"));
         });
 
         server.addEventListener(SocketAction.FINISH_QUIZ.toString(), Map.class, (client, data, ackRequest) -> {

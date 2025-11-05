@@ -10,8 +10,7 @@ import kafoor.quizzes.quizzes_service.repositories.QuizRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -58,12 +57,12 @@ public class QuizService {
 
     public void startQuiz(QuizStartDTO dto) {
         Quiz quiz = findQuizById(dto.getQuizId());
-        quiz.setStartedAt(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        quiz.setStartedAt(Instant.now().toEpochMilli());
         memberService.addMembers(quiz, dto.getUsers());
     }
 
     public void finishQuiz(long id) {
         Quiz quiz = findQuizById(id);
-        quiz.setEndedAt(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());
+        quiz.setEndedAt(Instant.now().toEpochMilli());
     }
 }

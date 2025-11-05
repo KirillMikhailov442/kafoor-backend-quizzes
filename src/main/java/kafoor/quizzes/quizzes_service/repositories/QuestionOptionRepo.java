@@ -13,6 +13,8 @@ public interface QuestionOptionRepo extends JpaRepository<QuestionsOption, Long>
     @Query("SELECT qo.option FROM QuestionsOption qo WHERE qo.question.id = :questionId")
     List<Option> findOptionsByQuestionId(@Param("questionId") long questionId);
 
+    QuestionsOption findByQuestionIdAndOptionId(long questionId, long optionId);
+
     List<QuestionsOption> findAllByQuestion(Question question);
 
     List<QuestionsOption> findAllByOption(Option option);

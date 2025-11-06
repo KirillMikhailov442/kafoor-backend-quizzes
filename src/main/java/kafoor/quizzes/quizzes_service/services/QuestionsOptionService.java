@@ -26,8 +26,6 @@ public class QuestionsOptionService {
     public void changeIsCorrect(Question question, Option option, boolean isCorrect) {
         QuestionsOption questionsOption = questionOptionRepo.findByQuestionAndOption(question, option);
         questionsOption.setCorrect(isCorrect);
-        System.out.println(questionsOption.getQuestion().getSlug());
-        System.out.println(questionsOption.getOption().getSlug());
         questionOptionRepo.save(questionsOption);
     }
 

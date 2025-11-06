@@ -30,6 +30,12 @@ public class Member {
     @JoinColumn(name = "quiz_id", nullable = false)
     private Quiz quiz;
 
+    @Transient
+    private Long quizId;
+
+    @Transient
+    private String quizName;
+
     @CreationTimestamp
     @Column(name = "created_at")
     private long createdAt;
@@ -37,4 +43,12 @@ public class Member {
     @JsonIgnore
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<MemberAnswer> memberAnswers = new ArrayList<>();
+
+    public Long getQuizId() {
+        return quiz != null ? quiz.getId() : null;
+    }
+
+    public String getQuizName() {
+        return quiz != null ? quiz.getName() : null;
+    }
 }

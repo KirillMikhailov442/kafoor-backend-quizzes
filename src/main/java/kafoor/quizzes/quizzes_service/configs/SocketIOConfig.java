@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Component
@@ -111,6 +112,12 @@ public class SocketIOConfig {
             server.getRoomOperations(data.get("quizId").toString()).sendEvent(SocketAction.FINISH_QUIZ.toString(),
                     data.get("rating"));
         });
+
+        server.addEventListener(SocketAction.EXPULSION_FROM_QUIZ.toString(), String.class,
+                (client, data, ackRequest) -> {
+                    server.getClient(UUID.fromString(data))
+                            .sendEvent(SocketAction.EXPULSION_FROM_QUIZ.toString());
+                });
 
         server.start();
         return server;

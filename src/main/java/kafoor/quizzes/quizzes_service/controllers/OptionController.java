@@ -41,7 +41,6 @@ public class OptionController {
 
     @PutMapping("/options")
     public ResponseEntity<Option> updateOption(@Valid @RequestBody OptionUpdateReqDTO dto) {
-        System.out.println(dto.isCorrect());
         return ResponseEntity.ok(optionService.updateOption(dto));
     }
 

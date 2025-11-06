@@ -58,7 +58,8 @@ public class QuizService {
     public void startQuiz(QuizStartDTO dto) {
         Quiz quiz = findQuizById(dto.getQuizId());
         quiz.setStartedAt(Instant.now().toEpochMilli());
-        memberService.addMembers(quiz, dto.getUsers());
+        List<Long> members = dto.getUsers().stream().filter(el -> el != quiz.getUserId()).toList();
+        memberService.addMembers(quiz, members);
     }
 
     public void finishQuiz(long id) {

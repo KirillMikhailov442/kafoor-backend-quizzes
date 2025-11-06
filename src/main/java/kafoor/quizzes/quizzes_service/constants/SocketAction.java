@@ -13,5 +13,6 @@ public enum SocketAction {
     TIMER,
     TELL_CORRECT_ANSWER,
     SAY_MY_ANSWER,
-    TELL_RATING;
+    TELL_RATING,
+    EXPULSION_FROM_QUIZ;
 }

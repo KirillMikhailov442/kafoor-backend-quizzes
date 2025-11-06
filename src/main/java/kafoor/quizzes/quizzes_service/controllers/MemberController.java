@@ -8,8 +8,12 @@ import kafoor.quizzes.quizzes_service.models.Member;
 import kafoor.quizzes.quizzes_service.models.Quiz;
 import kafoor.quizzes.quizzes_service.services.MemberService;
 import kafoor.quizzes.quizzes_service.services.QuizService;
+
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Member")
@@ -25,6 +29,12 @@ public class MemberController {
     @GetMapping("/members/{id}")
     public ResponseEntity<Member> getOneMember(@PathVariable(name = "id") long memberId) {
         return ResponseEntity.ok(memberService.findMemberById(memberId));
+    }
+
+    @GetMapping("/members/quizzes")
+    public ResponseEntity<List<Member>> getQuizzes() {
+        long userId = Long.parseLong(SecurityContextHolder.getContext().getAuthentication().getName());
+        return ResponseEntity.ok(memberService.findAllMembersByUserId(userId));
     }
 
     @PostMapping("/members")

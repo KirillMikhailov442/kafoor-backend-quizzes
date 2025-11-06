@@ -29,6 +29,10 @@ public class MemberService {
         return memberAnswerRepo.findByMemberIdIn(membersId);
     }
 
+    public List<Member> findAllMembersByUserId(long userId) {
+        return memberRepo.findAllByUserId(userId);
+    }
+
     public Member findMemberById(long id) {
         return memberRepo.findById(id).orElseThrow(() -> new NotFound("Member not found"));
     }

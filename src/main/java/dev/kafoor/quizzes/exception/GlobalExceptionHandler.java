@@ -1,0 +1,46 @@
+package dev.kafoor.quizzes.exception;
+
+import dev.kafoor.quizzes.dto.v1.response.ErrorResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<?> handleException(BaseException ex, HttpServletRequest request){
+        ErrorResponse responseBody = ErrorResponse.builder()
+                        .message(ex.getMessage())
+                        .path(request.getServletPath())
+                        .timestamp(ex.getDate())
+                        .build();
+
+        return new ResponseEntity<>(responseBody, ex.getStatus());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleExceptionValidation(MethodArgumentNotValidException ex, HttpServletRequest request) {
+        Map<String, Object> responseBody = new HashMap<>();
+        Map<String, String> errors = new HashMap<>();
+
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        responseBody.put("timestamp", new Date());
+        responseBody.put("errors", errors);
+        responseBody.put("path", request.getServletPath());
+
+        return new ResponseEntity<>(responseBody, HttpStatus.BAD_REQUEST);
+    }
+}

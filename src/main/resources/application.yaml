@@ -1,0 +1,21 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: quizzes
+    autoconfigure:
+      exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: false
+server:
+  port: 8081
+logging:
+  level:
+    root: INFO
+  file:
+    name: app.log
+socket:
+  host: 0.0.0.0
+  port: 8083

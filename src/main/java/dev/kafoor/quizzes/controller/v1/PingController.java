@@ -1,4 +1,4 @@
-package dev.kafoor.quizzess.controller.v1;
+package dev.kafoor.quizzes.controller.v1;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;

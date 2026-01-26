@@ -49,6 +49,8 @@ dependencies {
 	implementation 'org.flywaydb:flyway-core'
 
 	implementation 'com.corundumstudio.socketio:netty-socketio:2.0.13'
+
+	implementation 'org.flywaydb:flyway-core'
 }
 
 tasks.named('test') {

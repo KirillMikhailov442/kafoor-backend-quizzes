@@ -10,7 +10,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: false
 server:
-  port: 8081
+  port: 8082
 logging:
   level:
     root: INFO

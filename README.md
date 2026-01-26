@@ -1,71 +1,74 @@
-# 🧠 Quiz Microservice
+# 🧠 Kafoor Backend — Quiz Management Service
 
-A dedicated microservice for **creating, managing, and running live quizzes in real time**.  
-Part of a larger system that includes a separate **User Account Service** for authentication and user management.
+A dedicated microservice for **creating, managing, and running live quizzes in real time** as part of the **Kafoor** online quiz platform. Handles the full quiz lifecycle, questions, participants, and live scoring — while delegating authentication and user data to the [User Account Service](https://github.com/KirillMikhailov442/kafoor-backend-users).
 
-> 🔗 **Works with**: [User Account Service](https://github.com/KirillMikhailov442/kafoor-backend-users) *(replace with actual link if available)*
+
+## 📌 Key Features
+
+- ✅ Full quiz lifecycle: create, update, delete, publish  
+- ❓ Manage questions and multiple-choice options  
+- 👥 Participant (member) registration for live quizzes  
+- ⚡ Real-time quiz execution with live updates (via WebSocket / Socket.IO)  
+- 📊 Live rating and score tracking  
+- 🔐 JWT-based authentication (delegated to User Service)  
+- 🔄 Automated database migrations with Flyway  
+- 📄 API documentation via Swagger UI (OpenAPI 3)  
+- 🧪 Input validation using Bean Validation  
+
+> ❗ **No user data stored locally** — only user IDs are referenced. Full profiles are fetched from the User Account Service when needed.
+
 
 ## 🛠 Tech Stack
-- Java 21
-- Spring Boot
-- Spring JPA
-- Spring Security
-- MySQL
-- Gradle
-- Swagger
-- SocketIO
+
+- **Language**: Java 23
+- **Framework**: Spring Boot 3.x  
+- **Real-time**: Spring WebSocket / Socket.IO  
+- **Database**: MySQL 8.0  
+- **ORM**: Spring Data JPA + Hibernate (`ddl-auto=validate` in production)  
+- **Security**: Spring Security + JWT (validated against User Service)  
+- **Migrations**: Flyway  
+- **Build Tool**: Gradle  
+- **API Docs**: Springdoc OpenAPI (Swagger UI)  
+- **Inter-service communication**: REST calls to User Service (e.g., by user ID)  
 
 
-## 🎯 Purpose
-This service handles:
-- Quiz lifecycle (create, update, delete)
-- Questions & answer options management
-- Participant (member) registration
-- Real-time quiz execution (start/finish)
-- Live rating data
+## 🚀 Quick Start
 
-🔐 **Authentication**: Delegates to the **User Account Service** via JWT validation.  
-👥 **User data**: Fetched from the User Service as needed (e.g., by user ID).
-
-
-## 🗃 Database
-- **Type**: MySQL
-- **Schema**: Managed by Hibernate (`spring.jpa.hibernate.ddl-auto=validate` in production)
-- **Owned entities**: `Quiz`, `Question`, `Option`, `Member`, `QuestionsOption`
-
-> ❗ **No user data stored here** — only user IDs (foreign keys). Full user profiles are managed by the **User Account Service**.
-
-
-## 🔌 Integration with User Account Service
-- **Authentication**: Validates JWT issued by User Service |
-- **User lookup (by ID)**: REST call or async message (e.g., Kafka) |
-- **Ownership checks**: Compares `user_id` from JWT with resource owner |
-
-> 💡 This service is **stateless** and **does not store passwords or sensitive user data**.
-
----
-
-## 🚀 Local Development
 ### Prerequisites
-- Java 21+
-- Gradle 8+
-- MySQL 8+
-- Running **User Account Service** (e.g., on `localhost:8081`)
+- **User Account Service** must be running (e.g., on `http://localhost:8082`)  
+- Docker and Docker Compose *(recommended)*  
+- OR locally: JDK 23+, MySQL 8.0, Gradle 8+
 
-### Run
+### Run with Docker Compose (Recommended)
+
+1. Clone the repository:
 ```bash
-git clone https://github.com/kafoor/quiz-service.git
-cd quiz-service
-./gradlew bootRun
+   git clone https://github.com/KirillMikhailov442/kafoor-backend-quizzes.git
+   cd kafoor-backend-quizzes
 ```
 
+2. Start the services:
+```bash
+docker-compose up --build
+```
+3. The service will be available at:
+🔗 http://localhost:8082
+
+4. Explore the API documentation:
+📘 http://localhost:8082/swagger-ui.html
+
+## 🔐 Security
+
+Protected endpoints require the Authorization header:
+> Authorization: Bearer <access_token>
+* Tokens are issued on login and can be refreshed via /auth/update-tokens.
+* Passwords are securely hashed using BCrypt.
+
 ## 📖 API Documentation
-Open in browser:
-http://localhost:8081/swagger-ui.html
-> ⚠️ Make sure the User Service is running — this service validates tokens against its public key or introspection endpoint.
+
+Open in browser: http://localhost:8082/swagger-ui.html
 
 ## 📄 License
-The project is available under the MIT License. See the LICENSE file for details.
 
-
-Deviloped with ❤️ for easy video communication.
+This project is licensed under the MIT License.
+See LICENSE for details.

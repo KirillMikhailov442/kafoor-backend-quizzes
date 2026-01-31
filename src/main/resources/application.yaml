@@ -11,6 +11,7 @@ spring:
     baseline-on-migrate: false
 server:
   port: 8082
+  address: 0.0.0.0  
 logging:
   level:
     root: INFO
@@ -19,3 +20,4 @@ logging:
 socket:
   host: 0.0.0.0
   port: 8083
+  cors: "*"

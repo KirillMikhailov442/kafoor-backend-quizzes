@@ -1,26 +1,17 @@
 version: '3.8'
 services:
-  quizzess:
+  quizzes:
+    image: quizzes-api
+    container_name: kafoor-quizzes-api
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     build: .
     ports:
-      - "8082:8082"
+      - "${SPRING_PORT:-8082}:8082"
+      - "${SOCKET_PORT:-8083}:8083"  
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/kafoor-quizzes?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-    depends_on:
-      - db
-
-  db:
-    image: mysql:8.0
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: kafoor-quizzes
-    ports:
-      - "3306:3306"
-    volumes:
-      - mysql_/var/lib/mysql
-
-volumes:
-  mysql_data:
+      DB_URL: ${DB_URL}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ACCESS_SECRET: ${ACCESS_SECRET}

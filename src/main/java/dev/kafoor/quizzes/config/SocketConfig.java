@@ -18,11 +18,15 @@ import java.util.UUID;
 @Component
 @Getter
 public class SocketConfig {
-    @Value("${socket.host}")
+
+    @Value("${socket.host:0.0.0.0}")
     private String host;
 
-    @Value("${socket.port}")
+    @Value("${socket.port:8083}")
     private int port;
+
+    @Value("${socket.cors:*}")
+    private String cors;
 
     @Autowired
     private QuizService quizService;
@@ -34,7 +38,7 @@ public class SocketConfig {
         Configuration config = new Configuration();
         config.setHostname(host);
         config.setPort(port);
-        config.setOrigin("*");
+        config.setOrigin(cors);
 
         server = new SocketIOServer(config);
 

@@ -21,7 +21,7 @@ public class OptionService {
     private final QuestionService questionService;
     private final QuestionsOptionService questionsOptionService;
 
-    public Optional<OptionEntity> findOptionById(long id){
+    public Optional<OptionEntity> findOptionById(long id) {
         return optionRepo.findById(id);
     }
 
@@ -29,7 +29,7 @@ public class OptionService {
         return optionRepo.findById(id).orElseThrow(() -> new NotFound("option not found by id"));
     }
 
-    public Optional<OptionEntity> findOptionBySlug(String slug){
+    public Optional<OptionEntity> findOptionBySlug(String slug) {
         return optionRepo.findBySlug(slug);
     }
 
@@ -37,17 +37,17 @@ public class OptionService {
         return optionRepo.findBySlug(slug).orElseThrow(() -> new NotFound("option not found by slug"));
     }
 
-    public boolean existsOptionById(long id){
+    public boolean existsOptionById(long id) {
         return optionRepo.existsById(id);
     }
 
-    public boolean existsOptionBySlug(String slug){
+    public boolean existsOptionBySlug(String slug) {
         return optionRepo.existsBySlug(slug);
     }
 
     @Transactional
-    public OptionEntity addOptionToQuestion(OptionCreate dto){
-        QuestionEntity questionEntity = questionService.findQuestionBySlugOrThrow(dto.getSlug());
+    public OptionEntity addOptionToQuestion(OptionCreate dto) {
+        QuestionEntity questionEntity = questionService.findQuestionBySlugOrThrow(dto.getQuestionSlug());
         OptionEntity newOption = OptionEntity.builder()
                 .text(dto.getText())
                 .slug(dto.getSlug())
@@ -63,8 +63,8 @@ public class OptionService {
     }
 
     @Transactional
-    public OptionEntity updateOption(OptionUpdate dto){
-        Optional<OptionEntity> optionEntity = optionRepo.findBySlug(dto.getSlug());
+    public OptionEntity updateOption(OptionUpdate dto) {
+        Optional<OptionEntity> optionEntity = findOptionBySlug(dto.getSlug());
         QuestionEntity questionEntity = questionService.findQuestionBySlugOrThrow(dto.getQuestionSlug());
 
         if (optionEntity.isEmpty()) {
@@ -76,7 +76,7 @@ public class OptionService {
                     .build();
             return addOptionToQuestion(optionCreate);
         } else {
-            OptionEntity existsOption = optionRepo.findBySlug(dto.getSlug()).get();
+            OptionEntity existsOption = findOptionBySlug(dto.getSlug()).get();
             existsOption.setText(dto.getText());
             questionsOptionService.changeIsCorrect(questionEntity, optionEntity.get(), dto.isCorrect());
             return optionRepo.save(existsOption);
@@ -89,6 +89,7 @@ public class OptionService {
         optionRepo.deleteById(id);
     }
 
+    @Transactional
     public void deleteOptionBySlug(String slug) {
         if (!existsOptionBySlug(slug))
             throw new NotFound("option not found by slug");

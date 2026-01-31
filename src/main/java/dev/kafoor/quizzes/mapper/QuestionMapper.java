@@ -17,7 +17,7 @@ public abstract class QuestionMapper {
     @Autowired
     private QuestionsOptionMapper optionMapper;
 
-    public QuestionResponse toQuestionResponse(QuestionEntity question){
+    public QuestionResponse toQuestionResponse(QuestionEntity question) {
         List<QuestionsOptionResponse> options = question.getOptions()
                 .stream()
                 .map(el -> optionMapper.toQuestionsOptionResponse(el))
@@ -33,7 +33,7 @@ public abstract class QuestionMapper {
                 .build();
     }
 
-    public QuestionCreate toQuestionCreate(QuestionCreateRequest request){
+    public QuestionCreate toQuestionCreate(QuestionCreateRequest request) {
         return QuestionCreate.builder()
                 .quizId(request.getQuizId())
                 .slug(request.getSlug())
@@ -43,7 +43,7 @@ public abstract class QuestionMapper {
                 .build();
     }
 
-    public QuestionUpdate toQuestionUpdate(QuestionUpdateRequest request){
+    public QuestionUpdate toQuestionUpdate(QuestionUpdateRequest request) {
         return QuestionUpdate.builder()
                 .quizId(request.getQuizId())
                 .slug(request.getSlug())

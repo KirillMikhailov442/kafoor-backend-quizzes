@@ -6,6 +6,7 @@ import dev.kafoor.quizzes.entity.QuestionEntity;
 import dev.kafoor.quizzes.entity.QuizEntity;
 import dev.kafoor.quizzes.exception.NotFound;
 import dev.kafoor.quizzes.repository.QuestionRepo;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -18,11 +19,11 @@ public class QuestionService {
     private final QuestionRepo questionRepo;
     private final QuizService quizService;
 
-    public Optional<QuestionEntity> findQuestionById(long id){
+    public Optional<QuestionEntity> findQuestionById(long id) {
         return questionRepo.findById(id);
     }
 
-    public QuestionEntity findQuestionByIdOrThrow(long id){
+    public QuestionEntity findQuestionByIdOrThrow(long id) {
         return questionRepo.findById(id).orElseThrow(() -> new NotFound("question not found by id"));
     }
 
@@ -34,20 +35,20 @@ public class QuestionService {
         return questionRepo.findBySlug(slug).orElseThrow(() -> new NotFound("question not found by slug"));
     }
 
-    public List<QuestionEntity> findAllQuestionsOfQuiz(long quizId){
+    public List<QuestionEntity> findAllQuestionsOfQuiz(long quizId) {
         QuizEntity quiz = quizService.findQuizByIdOrThrow(quizId);
         return quiz.getQuestions();
     }
 
-    public boolean existsQuestionById(long id){
+    public boolean existsQuestionById(long id) {
         return questionRepo.existsById(id);
     }
 
-    public boolean existsQuestionBySlug(String slug){
+    public boolean existsQuestionBySlug(String slug) {
         return questionRepo.existsBySlug(slug);
     }
 
-    public QuestionEntity createQuestion(QuestionCreate dto, long userId){
+    public QuestionEntity createQuestion(QuestionCreate dto, long userId) {
         quizService.isQuizOwnedByUserOrThrow(dto.getQuizId(), userId);
         QuizEntity quiz = quizService.findQuizById(dto.getQuizId()).get();
         QuestionEntity newQuestion = QuestionEntity.builder()
@@ -60,7 +61,7 @@ public class QuestionService {
         return questionRepo.save(newQuestion);
     }
 
-    public QuestionEntity updateQuestion(QuestionUpdate dto, long userId){
+    public QuestionEntity updateQuestion(QuestionUpdate dto, long userId) {
         quizService.isQuizOwnedByUserOrThrow(dto.getQuizId(), userId);
         QuizEntity quiz = quizService.findQuizByIdOrThrow(dto.getQuizId());
         QuestionEntity question = findQuestionBySlug(dto.getSlug()).orElse(new QuestionEntity());
@@ -80,6 +81,7 @@ public class QuestionService {
         questionRepo.deleteById(id);
     }
 
+    @Transactional
     public void deleteQuestionBySlug(String slug) {
         if (!existsQuestionBySlug(slug))
             throw new NotFound("question not found by slug");

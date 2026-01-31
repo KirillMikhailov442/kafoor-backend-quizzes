@@ -7,7 +7,7 @@ spring:
     debug: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       show-sql: false
 error:
   include-stacktrace: never
@@ -15,9 +15,3 @@ error:
 token:
   access:
     secret: ${ACCESS_SECRET}
-    lifetime: ${ACCESS_LIFETIME}
-  refresh:
-    secret: ${REFRESH_SECRET}
-    lifetime: ${REFRESH_LIFETIME}
-generator:
-  secret: ${GENERATOR_SECRET}

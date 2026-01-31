@@ -25,7 +25,7 @@ public class QuizService {
         return quizRepo.findByUserId(userId);
     }
 
-    public Optional<QuizEntity> findQuizById(long id){
+    public Optional<QuizEntity> findQuizById(long id) {
         return quizRepo.findById(id);
     }
 
@@ -33,23 +33,23 @@ public class QuizService {
         return quizRepo.findById(id).orElseThrow(() -> new NotFound("quiz not found by id"));
     }
 
-    public boolean existsQuizById(long id){
+    public boolean existsQuizById(long id) {
         return quizRepo.existsById(id);
     }
 
-    public boolean isQuizOwnedByUser(long quizId, long userId){
+    public boolean isQuizOwnedByUser(long quizId, long userId) {
         QuizEntity quiz = findQuizByIdOrThrow(quizId);
         return quiz.getUserId() == userId;
     }
 
-    public void isQuizOwnedByUserOrThrow(long quizId, long userId){
+    public void isQuizOwnedByUserOrThrow(long quizId, long userId) {
         QuizEntity quiz = findQuizByIdOrThrow(quizId);
-        if(quiz.getUserId() != userId){
+        if (quiz.getUserId() != userId) {
             throw new Conflict("this quiz does not belong to you");
         }
     }
 
-    public QuizEntity createQuiz(QuizCreate dto, long userId){
+    public QuizEntity createQuiz(QuizCreate dto, long userId) {
         QuizEntity newQuiz = QuizEntity.builder()
                 .name(dto.getName())
                 .maxMembers(dto.getMaxMembers())
@@ -58,12 +58,12 @@ public class QuizService {
         return quizRepo.save(newQuiz);
     }
 
-    public QuizEntity updateQuiz(QuizUpdate dto, long userId){
+    public QuizEntity updateQuiz(QuizUpdate dto, long userId) {
         QuizEntity quiz = findQuizByIdOrThrow(dto.getId());
-        if(quiz.getUserId() != userId){
+        if (quiz.getUserId() != userId) {
             throw new Conflict("this quiz does not belong to you");
         }
-        if(dto.getName() != null){
+        if (dto.getName() != null) {
             quiz.setName(dto.getName());
         }
         quiz.setMaxMembers(dto.getMaxMembers());
@@ -76,17 +76,21 @@ public class QuizService {
         quizRepo.deleteById(id);
     }
 
-    public void startQuiz(QuizStart dto){
+    public void startQuiz(QuizStart dto) {
         QuizEntity quiz = findQuizByIdOrThrow(dto.getQuizId());
         quiz.setStartedAt(LocalDateTime.now());
+        quizRepo.save(quiz);
+
         List<Long> members = dto.getUsers()
                 .stream()
                 .filter(el -> !Objects.equals(el, quiz.getUserId()))
                 .toList();
+        memberService.addMembers(quiz, members);
     }
 
     public void finishQuiz(long id) {
         QuizEntity quiz = findQuizByIdOrThrow(id);
         quiz.setEndedAt(LocalDateTime.now());
+        quizRepo.save(quiz);
     }
 }

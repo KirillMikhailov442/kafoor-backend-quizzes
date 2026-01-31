@@ -12,7 +12,6 @@ import dev.kafoor.quizzes.repository.MemberRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,23 +24,31 @@ public class MemberService {
         return memberRepo.findAllByUserId(userId);
     }
 
-    public Optional<MemberEntity> findMemberById(long id){
+    public Optional<MemberEntity> findMemberById(long id) {
         return memberRepo.findById(id);
     }
 
-    public MemberEntity findMemberByIdOrThrow(long id){
+    public MemberEntity findMemberByIdOrThrow(long id) {
         return memberRepo.findById(id).orElseThrow(() -> new NotFound("member not found by id"));
     }
 
-    public Optional<MemberEntity> findFirstMemberById(long id){
+    public Optional<MemberEntity> findFirstMemberById(long id) {
         return memberRepo.findFirstByUserId(id);
     }
 
-    public MemberEntity findFirstMemberByIdOrThrow(long id){
+    public MemberEntity findFirstMemberByIdOrThrow(long id) {
         return memberRepo.findFirstByUserId(id).orElseThrow(() -> new NotFound("member not found by id"));
     }
 
-    public boolean existsMemberById(long id){
+    public Optional<MemberEntity> findMemberByUserId(long userId) {
+        return memberRepo.findByUserId(userId);
+    }
+
+    public MemberEntity findMemberByUserIdOrThrow(long userId) {
+        return memberRepo.findByUserId(userId).orElseThrow(() -> new NotFound("member not found by id"));
+    }
+
+    public boolean existsMemberById(long id) {
         return memberRepo.existsById(id);
     }
 

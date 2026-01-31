@@ -23,12 +23,12 @@ public class MemberAnswerService {
         return memberAnswerRepo.findByMemberIdIn(membersId);
     }
 
-    public void addAnswersMember(QuizFinish dto){
+    public void addAnswersMember(QuizFinish dto) {
         List<MemberAnswerEntity> memberAnswers = new ArrayList<>();
 
         dto.getAnswers().forEach((userId, answers) -> {
             MemberEntity member = memberService.findFirstMemberByIdOrThrow(userId);
-            for (UserAnswer userAnswer: answers){
+            for (UserAnswer userAnswer : answers) {
                 QuestionsOptionEntity answer = questionsOptionService.findByQuestionIdAndOptionIdOrThrow(
                         userAnswer.getQuestionID(),
                         userAnswer.getAnswer());

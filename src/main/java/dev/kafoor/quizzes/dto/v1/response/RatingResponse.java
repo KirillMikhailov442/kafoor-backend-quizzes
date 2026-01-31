@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -12,6 +13,10 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RatingResponse {
+    private Long id;
+    private String name;
+    private LocalDateTime startedAt;
+    private LocalDateTime endedAt;
     private List<MemberResponse> members;
     private List<QuestionResponse> questions;
     private List<MemberAnswerResponse> answers;

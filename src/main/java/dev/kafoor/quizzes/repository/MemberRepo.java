@@ -10,4 +10,7 @@ public interface MemberRepo extends JpaRepository<MemberEntity, Long> {
     Optional<MemberEntity> findFirstByUserId(long userId);
 
     List<MemberEntity> findAllByUserId(long userId);
+
+    Optional<MemberEntity> findByUserId(long userId);
+
 }

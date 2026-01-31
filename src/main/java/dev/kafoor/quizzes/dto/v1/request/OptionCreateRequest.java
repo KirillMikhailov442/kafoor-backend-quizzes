@@ -14,7 +14,7 @@ public class OptionCreateRequest {
     @NotBlank(message = "question slug must not be blank")
     private String questionSlug;
 
-    @NotBlank(message = "text must not be blank")
+    @NotNull(message = "text must not be null")
     private String text;
 
     @NotNull(message = "correct is mandatory")

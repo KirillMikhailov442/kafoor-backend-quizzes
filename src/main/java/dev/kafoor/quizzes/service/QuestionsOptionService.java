@@ -27,7 +27,8 @@ public class QuestionsOptionService {
     }
 
     public QuestionsOptionEntity findByQuestionIdAndOptionIdOrThrow(long questionId, long optionId) {
-        return questionOptionRepo.findByQuestionIdAndOptionId(questionId, optionId).orElseThrow(() -> new NotFound("questions or options not found"));
+        return questionOptionRepo.findByQuestionIdAndOptionId(questionId, optionId)
+                .orElseThrow(() -> new NotFound("questions or options not found"));
     }
 
     public Optional<QuestionsOptionEntity> findByQuestionAndOption(QuestionEntity question, OptionEntity option) {
@@ -35,7 +36,8 @@ public class QuestionsOptionService {
     }
 
     public QuestionsOptionEntity findByQuestionAndOptionOrThrow(QuestionEntity question, OptionEntity option) {
-        return questionOptionRepo.findByQuestionAndOption(question, option).orElseThrow(() -> new NotFound("questions or options not found"));
+        return questionOptionRepo.findByQuestionAndOption(question, option)
+                .orElseThrow(() -> new NotFound("questions or options not found"));
     }
 
     public void changeIsCorrect(QuestionEntity question, OptionEntity option, boolean isCorrect) {
